@@ -3,40 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>議聲科技 戰略儀表板</title>
-    <!-- 
-        Chosen Palette: "Midnight Blue & Cyber Glow" (深藍科技感 - 參考強尼車坊)
-        - Background: bg-gray-900 
-        - Text: text-gray-300 (主文), text-gray-400/500 (次文)
-        - Accent: text-blue-400, border-blue-500, ring-blue-500
-        - Cards: bg-gray-950 or bg-gray-800, border border-gray-800, rounded-lg
-        - Pain Point: text-red-400, bg-red-900/20, border-red-500/30
-        - Solution: text-green-400, bg-green-900/20, border-green-500/30
-        - Highlight: text-yellow-300
-
-        Application Structure Plan: (維持不變, 強化互動)
-        - 採用「主題式儀表板」結構，頂部導航欄分為：「總覽」、「診斷」、「戰略」、「戰術佈局」、「平台總綱」、「影片配額」、「風控」、「11/11方案」及「總結」。
-        - 大量使用卡片 (Cards) 和 Accordion 來組織內容，初始隱藏部分細節，點擊展開，以此舒緩視覺擁擠。
-        - 平台選擇保留互動卡片形式。
-        - 用戶旅程改為更緊湊的列表。
-        - 結構選擇理由維持不變：將靜態文件轉化為動態探索工具，100% 承載報告資訊，並透過互動降低初始視覺負擔。
-
-        Visualization & Content Choices: (維持不變, 樣式調整)
-        - [市場三大困局] -> [HTML 卡片] (深色主題)
-        - [新舊定位] -> [HTML 上下排列卡片] (深色主題, H3標題極大化)
-        - [三平台漏斗] -> [JS 互動卡片] (深色主題)
-        - [22 支影片配比] -> [Chart.js Donut Chart] (深色主題色彩)
-        - [22 支影片戰術分工] -> [HTML Accordion] (深色主題)
-        - [風險控管] -> [HTML Accordion] (深色主題)
-        - [用戶旅程] -> [HTML 列表] (深色主題)
-
-        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
-    -->
+    <!-- 標題：議聲科技 戰略儀表板 (完整校正版) -->
+    <title>議聲科技 戰略儀表板 (完整校正版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         html {
             scroll-behavior: smooth;
@@ -45,20 +18,20 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #111827; /* bg-gray-900 */
             color: #d1d5db; /* text-gray-300 */
-            overscroll-behavior-y: none; /* Prevent bounce scroll */
+            overscroll-behavior-y: none;
         }
         .chart-container {
             position: relative;
-            height: 250px; 
+            height: 250px;
             max-width: 300px;
             margin: auto;
         }
         /* Navigation Styles */
-        header { 
-            @apply bg-gray-900/80 backdrop-blur-lg shadow-lg shadow-blue-500/10 sticky top-0 z-50 border-b border-gray-800; 
+        header {
+            @apply bg-gray-900/80 backdrop-blur-lg shadow-lg shadow-blue-500/10 sticky top-0 z-50 border-b border-gray-800;
         }
         .nav-link {
-            @apply px-3 py-2 rounded-md text-xs font-medium text-gray-400 hover:text-blue-400 transition-colors duration-300; 
+            @apply px-3 py-2 rounded-md text-sm font-medium text-gray-400 hover:text-blue-400 transition-colors duration-300;
             border-bottom: 2px solid transparent;
         }
         .nav-link.active, .nav-link:hover {
@@ -66,191 +39,175 @@
         }
         /* Card Styles */
         .card {
-            @apply bg-gray-950 rounded-xl shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-800; 
+            @apply bg-gray-950 rounded-xl shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-800;
         }
         .card-hover {
-            @apply hover:shadow-2xl hover:shadow-blue-500/15 hover:-translate-y-1 hover:border-gray-700; 
+            @apply hover:shadow-2xl hover:shadow-blue-500/15 hover:-translate-y-1 hover:border-gray-700;
         }
         /* Button Styles */
         .btn {
-             @apply px-5 py-2 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-500 transition-all duration-300 shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 text-sm; 
+            @apply px-5 py-2 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-500 transition-all duration-300 shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 text-sm;
         }
         /* Platform Card Styles */
-        .platform-card {
-            @apply p-6 rounded-xl shadow-lg cursor-pointer transition-all duration-300 border-2 border-gray-800 bg-gray-800; 
-        }
-        .platform-card.active {
-            @apply shadow-2xl shadow-blue-500/20 -translate-y-1 ring-2 ring-offset-2 ring-offset-gray-900; 
-        }
-        #card-tiktok { @apply hover:border-gray-600; } 
-        #card-tiktok.active { @apply ring-gray-500 border-gray-500; } 
+        .platform-card { @apply p-6 rounded-xl shadow-lg cursor-pointer transition-all duration-300 border-2 border-gray-800 bg-gray-800; }
+        .platform-card.active { @apply shadow-2xl shadow-blue-500/20 -translate-y-1 ring-2 ring-offset-2 ring-offset-gray-900; }
+        #card-tiktok { @apply hover:border-gray-600; }
+        #card-tiktok.active { @apply ring-gray-500 border-gray-500; }
         #card-ig { @apply !bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 text-white hover:border-purple-700; }
         #card-ig.active { @apply ring-purple-500 border-purple-500; }
         #card-shopee { @apply !bg-orange-700 text-white hover:border-orange-500; }
         #card-shopee.active { @apply ring-orange-500 border-orange-500; }
 
         /* Accordion Styles */
-        .accordion-toggle {
-            @apply flex justify-between items-center w-full p-4 text-left text-gray-200 hover:bg-gray-700/50 transition-colors duration-200; 
+        .accordion-toggle { @apply flex justify-between items-center w-full p-4 text-left text-gray-200 hover:bg-gray-700/50 transition-colors duration-200; }
+        .accordion-content { 
+            @apply bg-gray-900 border-t border-gray-800 overflow-hidden transition-all duration-300; 
+            /* JS 會控制 maxHeight */
         }
-        .accordion-content {
-            @apply p-4 pt-3 bg-gray-900 border-t border-gray-800; 
+        .accordion-content.hidden {
+            @apply !pt-0 !pb-0;
+            max-height: 0px;
         }
-        .accordion-icon {
-            @apply text-base text-gray-500 transition-transform duration-300; 
-        }
-        .accordion-toggle:not(.collapsed) .accordion-icon {
-            @apply rotate-[135deg];
-        }
-        .accordion-wrapper { @apply rounded-xl shadow-xl border border-gray-800 bg-gray-950 overflow-hidden; } 
+        .accordion-icon { @apply text-base text-gray-500 transition-transform duration-300; }
+        .accordion-toggle:not(.collapsed) .accordion-icon { @apply rotate-[135deg]; }
+        .accordion-wrapper { @apply rounded-xl shadow-xl border border-gray-800 bg-gray-950 overflow-hidden; }
         .accordion-wrapper > div:not(:last-child) .accordion-toggle { @apply border-b border-gray-800; }
 
         /* Final Summary Card Styles */
-        .final-card {
-             @apply bg-gray-950 border-t-4 border-blue-500 rounded-xl p-8 shadow-xl; 
-        }
-        /* Utility for secondary/tertiary text */
-        .text-secondary {
-            @apply text-gray-400;
-        }
-        .text-tertiary {
-             @apply text-gray-500;
-        }
-        /* Section Heading */
+        .final-card { @apply bg-gray-950 border-t-4 border-blue-500 rounded-xl p-8 shadow-xl; }
+
+        /* Utility Text */
+        .text-secondary { @apply text-gray-400; }
+        .text-tertiary { @apply text-gray-500; }
+
+        /* Section Spacing */
         section {
-            @apply min-h-screen flex flex-col justify-center scroll-mt-24 py-32 md:py-48; 
+            @apply scroll-mt-24 py-24 md:py-32;
         }
-        section:first-child { @apply pt-0; } 
+        section:first-of-type {
+            @apply pt-32 md:pt-40;
+        }
 
-        h1 { 
-             /* Kept large but less than new H3 */
-             @apply text-5xl md:text-6xl font-black text-center mb-8 text-blue-400; 
+        /* --- Typographic Hierarchy --- */
+        h1 {
+            @apply text-4xl md:text-5xl font-black text-center mb-6 text-blue-400;
         }
-         h1 + p { 
-             @apply text-lg md:text-xl text-center text-gray-400 mb-20; 
-         }
-        
-        /* --- ABSOLUTE MAX EMPHASIS H2 --- */
-        h2 { 
-            @apply text-8xl md:text-9xl font-black text-center mb-40 md:mb-48 text-blue-100 relative pb-10 
-                   after:content-[''] after:absolute after:left-1/4 after:bottom-0 after:w-1/2 after:h-4 after:bg-gradient-to-r after:from-blue-700 after:via-blue-500 after:to-blue-700; /* MAX SIZE, bright color, THICKEST/LONGEST underline */
-            line-height: 1.1 !important; /* Ensure line height doesn't cause overlap */
-            padding-top: 2rem; /* Add padding top to prevent overlap with previous content */
+        h1 + p {
+            @apply text-lg md:text-xl text-center text-gray-400 mb-16;
         }
         
-        /* Sub Heading */
-        h3 { /* Major subsection titles - Reduced */
-             @apply text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-gray-100; 
+        /* --- START: 校正版 H2 章節標題樣式 --- */
+        h2 {
+            /* 1. 尺寸調降，更像標題，而非 Banner */
+            @apply text-4xl md:text-5xl font-black text-center text-blue-100 
+                   max-w-4xl mx-auto py-6 px-8 mb-16 /* 2. 縮減垂直空間 (py-6) 與底部間距 (mb-16) */
+                   bg-gradient-to-r from-gray-900 via-gray-950 to-gray-900 
+                   border-y-2 border-blue-600 /* 3. 邊框改為 2px，更精緻 */
+                   rounded-lg shadow-2xl shadow-blue-600/20;
+            line-height: 1.25 !important;
         }
-        /* --- SPECIAL H3 STYLE FOR POSITIONING CARDS (Removed maximization) --- */
-        .positioning-title { 
-            /* Reverted to standard H3 style */
-             @apply text-2xl md:text-3xl font-bold mb-8 md:mb-12; 
-             /* Remove gradient line */
-             padding-bottom: 0; 
-             &:after { content: none; }
-        }
-        /* Keep color distinction */
-        .positioning-title.text-red-400 { @apply text-red-400; }
-        .positioning-title.text-green-400 { @apply text-green-400; }
+        /* --- END: 校正版 H2 章節標題樣式 --- */
 
+        h3 {
+            @apply text-2xl md:text-3xl font-bold mb-8 text-gray-100;
+        }
+        h4 {
+            @apply text-lg font-bold mb-4 text-gray-200;
+        }
+        h5 {
+            @apply text-base font-semibold mb-2 text-gray-300;
+        }
 
-        h4 { /* Minor subsection titles - Reduced */
-             @apply text-lg font-bold mb-5 text-gray-200; 
-        }
-        h5 { /* Card titles or key points - Reduced */
-            @apply text-sm font-semibold mb-3 text-gray-300; 
-        }
-        /* Paragraph spacing - Reduced font size */
+        /* --- START: 校正版 內文易讀性 --- */
         p, ul, ol, dl {
-             @apply mb-4 leading-normal text-xs text-secondary; /* Smallest base size & margin */
+            /* 1. 提升至 16px，大幅改善易讀性 */
+            @apply mb-5 leading-relaxed text-base; 
+            /* 2. 基礎文字顏色從 gray-400 (secondary) 提升至 gray-300 (body 預設) */
+            color: #d1d5db; 
         }
-        li { @apply mb-1.5; } /* Reduced margin */
+        /* 僅針對需要弱化的輔助文字，才在 HTML 中單獨使用 .text-secondary */
+        p.text-secondary, .text-secondary { @apply text-gray-400; }
+        /* --- END: 校正版 內文易讀性 --- */
 
-        /* User Journey Step Styling - Compact List */
-        .journey-list { @apply space-y-2; } /* Reduced spacing */
+        li { @apply mb-2; }
+
+        /* User Journey Step Styling */
+        .journey-list { @apply space-y-4; }
         .journey-item { @apply flex items-start; }
-        .journey-icon { @apply flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mr-2 text-xs font-bold text-white shadow-md; } /* Smallest */
+        .journey-icon { @apply flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mr-4 text-sm font-bold text-white shadow-md; }
 
-        /* Red/Green Card accents */
-        .pain-card { @apply !bg-red-900/20 border !border-red-500/30; } 
-        .pain-card h2 { /* Reset H2 inside pain card */
-            @apply !text-red-400 !text-3xl !text-center !border-none !pb-0 !mb-5 !before:content-none !after:content-none !font-bold; 
-        } 
-        .pain-card p { @apply !text-red-200 !text-xs; } 
-        
+        /* Pain/Solution Card Styles */
+        .pain-card { @apply !bg-red-900/20 border !border-red-500/30; }
+        /* 覆蓋 h2 樣式 (移除 !important) */
+        .pain-card h2 {
+            @apply text-red-400 text-2xl text-left border-none pb-0 mb-4 font-bold
+                   bg-transparent border-y-0 shadow-none py-0 px-0;
+            line-height: 1.25;
+        }
+        .pain-card p { @apply !text-red-200; }
+
         .solution-card { @apply !bg-green-900/20 border !border-green-500/30; }
-        .solution-card h2 { /* Reset H2 inside solution card */
-             @apply !text-green-400 !text-3xl !text-center !border-none !pb-0 !mb-5 !before:content-none !after:content-none !font-bold; 
-        } 
-        .solution-card p { @apply !text-green-200 !text-xs; } 
+        .solution-card h2 {
+            @apply text-green-400 text-2xl text-left border-none pb-0 mb-4 font-bold
+                   bg-transparent border-y-0 shadow-none py-0 px-0;
+            line-height: 1.25;
+        }
+        .solution-card p { @apply !text-green-200; }
 
         /* Risk Card accents */
         .risk-card-neutral { @apply !bg-gray-800 border !border-gray-700; }
         .risk-card-neutral h3 { @apply !text-gray-100; }
-
         .risk-card-red { @apply !bg-red-900/20 border !border-red-500/30; }
         .risk-card-red h3 { @apply !text-red-400; }
         .risk-card-red .accordion-toggle { @apply hover:!bg-red-800/20; }
         .risk-card-red .accordion-content { @apply !bg-red-950/30; }
-
         .risk-card-green { @apply !bg-green-900/20 border !border-green-500/30; }
         .risk-card-green h3 { @apply !text-green-400; }
         .risk-card-green .accordion-toggle { @apply hover:!bg-green-800/20; }
         .risk-card-green .accordion-content { @apply !bg-green-950/30; }
 
-
-        /* Table-like structure for困局 */
+        /* 困局卡片優化 */
         .kuju-card {
-             @apply flex flex-col h-full bg-gray-800 p-5 rounded-lg; 
+            @apply flex flex-col h-full bg-gray-800 p-6 rounded-lg;
         }
-        .kuju-card > div:last-child {
-             @apply mt-auto pt-3 border-t border-gray-700; 
-        }
-        .highlight { /* Yellow highlight */
-             color: #facc15; /* yellow-400 */
-             font-weight: 600;
-        }
-        .emphasis { /* General emphasis using blue */
-            @apply font-semibold text-blue-300;
+        .kuju-card > .risk-box {
+            @apply mt-auto pt-4 border-t border-gray-700;
         }
 
+        /* Highlight/Emphasis Styles */
+        .highlight { color: #facc15; font-weight: 600; } /* yellow-400 */
+        .emphasis { @apply font-semibold text-blue-300; }
 
-        /* Specific Platform Details Style */
-         #platform-details-content ul { @apply text-xs text-secondary; } 
-         #platform-details-content h4 { @apply text-lg text-gray-200; } 
-         #platform-details-content strong { @apply font-semibold; }
-         #platform-details-content em { @apply text-xs text-gray-500; } 
+        /* Platform Details Style */
+        #platform-details-content ul { @apply text-base text-secondary; }
+        #platform-details-content h4 { @apply text-xl text-gray-200; }
+        #platform-details-content strong { @apply font-semibold text-gray-100; }
+        #platform-details-content em { @apply text-sm text-gray-500; }
 
-        /* Style for strong tags used instead of markdown ** */
-         strong.emphasis {
-             @apply font-semibold text-blue-300; 
-         }
-         strong.highlight {
-              @apply font-semibold text-yellow-300; /* Use yellow for highlight */
-         }
-
-
+        /* Style for strong tags (重複但確保覆蓋) */
+        strong.emphasis { @apply font-semibold text-blue-300; }
+        strong.highlight { @apply font-semibold text-yellow-300; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300 antialiased">
 
     <!-- 頂部導航欄 -->
-    <header class="bg-gray-900/80 backdrop-blur-lg shadow-lg shadow-blue-500/10 sticky top-0 z-50 border-b border-gray-800">
+    <header>
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <div class="text-xl font-bold text-blue-400">
-                議聲科技 社群轉型策略建議指南
+                議聲科技 戰略儀表板
             </div>
+            <!-- 校正：移除 onclick，交由 JS Scroll-Spy 處理 -->
             <div class="hidden md:flex space-x-1">
-                <a href="#overview" class="nav-link active" onclick="setActiveLink(this)">總覽</a>
-                <a href="#problem" class="nav-link" onclick="setActiveLink(this)">診斷</a>
-                <a href="#strategy" class="nav-link" onclick="setActiveLink(this)">戰略</a>
-                <a href="#tactics" class="nav-link" onclick="setActiveLink(this)">戰術佈局</a> 
-                <a href="#strategy-master-plan" class="nav-link" onclick="setActiveLink(this)">總綱</a> 
-                <a href="#allocation" class="nav-link" onclick="setActiveLink(this)">製作</a> 
-                <a href="#risks" class="nav-link" onclick="setActiveLink(this)">風險</a>
-                <a href="#action-plan" class="nav-link" onclick="setActiveLink(this)">11/11方案</a>
-                <a href="#final-summary" class="nav-link" onclick="setActiveLink(this)">總結</a>
+                <a href="#overview" class="nav-link active">總覽</a>
+                <a href="#problem" class="nav-link">診斷</a>
+                <a href="#strategy" class="nav-link">戰略</a>
+                <a href="#tactics" class="nav-link">戰術佈局</a>
+                <a href="#strategy-master-plan" class="nav-link">平台總綱</a>
+                <a href="#allocation" class="nav-link">影片配額</a>
+                <a href="#risks" class="nav-link">風控</a>
+                <a href="#action-plan" class="nav-link">11/11方案</a>
+                <a href="#final-summary" class="nav-link">總結</a>
             </div>
             <div class="md:hidden">
                 <button id="mobile-menu-button" class="text-gray-400 hover:text-blue-400 focus:outline-none">
@@ -258,153 +215,163 @@
                 </button>
             </div>
         </nav>
-        <!-- 手機版選單 -->
+        <!-- 手機版選單 (JS 會處理 closeMenu()) -->
         <div id="mobile-menu" class="md:hidden hidden bg-gray-950 shadow-lg border-t border-gray-800">
-             <a href="#overview" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">總覽</a>
-             <a href="#problem" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">診斷</a>
-             <a href="#strategy" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">戰略</a>
-             <a href="#tactics" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">戰術佈局</a> 
-             <a href="#strategy-master-plan" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">總綱</a> 
-             <a href="#allocation" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">製作</a>
-             <a href="#risks" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">風險</a>
-             <a href="#action-plan" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">11/11方案</a>
-             <a href="#final-summary" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">總結</a>
+            <a href="#overview" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">總覽</a>
+            <a href="#problem" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">診斷</a>
+            <a href="#strategy" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">戰略</a>
+            <a href="#tactics" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">戰術佈局</a>
+            <a href="#strategy-master-plan" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">平台總綱</a>
+            <a href="#allocation" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">影片配額</a>
+            <a href="#risks" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">風控</a>
+            <a href="#action-plan" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">11/11方案</a>
+            <a href="#final-summary" class="block px-6 py-4 text-gray-400 hover:bg-gray-800 hover:text-blue-400" onclick="closeMenu()">總結</a>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 py-12 md:py-20">
+    <main class="container mx-auto px-6">
 
         <!-- 總覽 (Executive Summary) -->
-        <section id="overview" class="first:pt-0">
+        <section id="overview">
             <h1>一份創造「觀眾消費衝動」的行銷戰略</h1>
-            <p>以「議題驅動」與「真實敘事」打造高效轉換漏斗</p>
+            <p>— 以「議題驅動」與「真實敘事」打造高效轉換漏斗 —</p>
             
-             <!-- Stacking Layout -->
-            <div class="grid grid-cols-1 gap-12 max-w-4xl mx-auto"> 
-                <div class="card p-10 pain-card">
-                    
-                    <h2 class="text-3xl mb-5 !text-red-400">核心痛點：製造「心理痛感」</h2> 
-                    <p class="leading-relaxed !text-red-200">
+            <p class="text-center max-w-3xl mx-auto text-secondary">本報告的核心思維，完全圍繞一個終極目標：「創造一個讓觀眾無法拒絕的理由，使他們主動<strong class="emphasis">『想消費』</strong>」。</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-12">
+                <div class="card p-8 pain-card">
+                    <h2>核心痛點：製造「心理痛感」</h2>
+                    <p class="!text-red-200">
                         直指市場焦慮與營運的痛點，放大「問題的價值」。我們必須先讓客戶理解，現有的市場困局（同質化、人設老舊）與內部問題（品項繁雜）是多麼致命。
                     </p>
                 </div>
-                <div class="card p-10 solution-card">
-                
-                    <h2 class="text-3xl mb-5 !text-green-400">核心解方：提供「邏輯化解方」</h2>
-                    <p class="leading-relaxed !text-green-200">
+                <div class="card p-8 solution-card">
+                    <h2>核心解方：提供「邏輯化解方」</h2>
+                    <p class="!text-green-200">
                         提供一個獨特、完整且合理的解決方案。我們將透過「不立人設」的真實敘事與「策展人 IP」的定位，將所有產品線整合到「強化自我」的單一議題下。
                     </p>
                 </div>
             </div>
-            <blockquote class="text-center mt-20 border-l-4 border-blue-500 pl-6 italic text-sm text-gray-400 max-w-3xl mx-auto"> 
-                 此戰略結構的設計，旨在為 <span class="emphasis">議聲科技</span> 創造最大的「談判空間」。
+            <blockquote class="text-center mt-16 border-l-4 border-blue-500 pl-6 italic text-gray-400 max-w-3xl mx-auto">
+                此戰略結構的設計，旨在為 <span class="emphasis">議聲科技</span> 創造最大的「談判空間」。
             </blockquote>
         </section>
 
         <!-- 診斷 (The Problem) -->
         <section id="problem">
-            <h4>一、【診斷與定錨】：困局與破局之策</h4>
+            <h2>一、【診斷與定錨】：困局與破局之策</h2>
             
-            <div class="mb-20 card p-10 bg-gray-800/50 border-none shadow-inner"> 
+            <div class="mb-20 card p-10 bg-gray-800/50 border-none shadow-inner">
                 <h3 class="text-center !text-gray-100">1. 市場紅海現狀</h3>
-                <p class="text-center max-w-3xl mx-auto text-secondary leading-relaxed text-sm">台灣的直播電商生態已進入「紅海」階段。蝦皮、Facebook Live 等主流平台流量競爭激烈，導致廣告成本攀升。單一依賴蝦皮直播，將使 <span class="emphasis">議聲科技</span> 陷入與所有賣家爭搶同一批成熟受眾的困境。</p> 
+                <p class="text-center max-w-3xl mx-auto text-secondary leading-relaxed">台灣的直播電商生態已進入「紅海」階段。蝦皮、Facebook Live 等主流平台流量競爭激烈，導致廣告成本攀升。單一依賴蝦皮直播，將使 <span class="emphasis">議聲科技</span> 陷入與所有賣家爭搶同一批成熟受眾的困境。</p>
             </div>
 
-            <div class="mb-20"> 
+            <div class="mb-20">
                 <h3 class="text-center">2. 核心困局：市場同質化與人設操作老舊</h3>
-                 <p class="text-center text-secondary mb-12 max-w-3xl mx-auto text-sm">目前主流市場的直播打法，已陷入「三大困局」，這正是客戶「東西賣不出去」的根本原因：</p> 
-                <div class="grid md:grid-cols-3 gap-10"> 
+                <p class="text-center text-secondary mb-12 max-w-3xl mx-auto">目前主流市場的直播打法，已陷入「三大困局」，這正是客戶「東西賣不出去」的根本原因：</p>
+                <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     <!-- 困局一 -->
-                    <div class="card card-hover p-6 kuju-card !bg-gray-800"> 
+                    <div class="card card-hover kuju-card !bg-gray-800">
                         <div>
-                            <h4 class="text-gray-100 text-lg">1. 價格叫賣型</h4> 
-                            <p class="text-tertiary text-xs mb-4">主播高亢、激情地強調「全網最低價」、「+1」。</p> 
+                            <h4 class="text-gray-100">1. 價格叫賣型</h4>
+                            <p class="text-tertiary mb-4">主播高亢、激情地強調「全網最低價」、「+1」。</p>
                         </div>
-                        <div class="bg-red-900/30 p-3 rounded-md border border-red-500/50"> 
-                            <h5 class="font-semibold text-red-400 text-xs mb-1">核心風險</h5> 
-                            <p class="text-red-300 text-xs">觀眾只對價格敏感，毫無品牌忠誠度，利潤極低。</p> 
+                        <div class="risk-box bg-red-900/30 p-4 rounded-md border border-red-500/50">
+                            <h5 class="font-semibold text-red-400 mb-1">核心風險</h5>
+                            <p class="text-red-300 text-sm">觀眾只對價格敏感，毫無品牌忠誠度，利潤極低。</p>
                         </div>
                     </div>
                     <!-- 困局二 -->
-                    <div class="card card-hover p-6 kuju-card !bg-gray-800"> 
-                         <div>
-                            <h4 class="text-gray-100 text-lg">2. KOL / 人設型</h4> 
-                            <p class="text-tertiary text-xs mb-4">依賴主播粉絲基礎和魅力販賣「信任」。</p> 
+                    <div class="card card-hover kuju-card !bg-gray-800">
+                        <div>
+                            <h4 class="text-gray-100">2. KOL / 人設型</h4>
+                            <p class="text-tertiary mb-4">依賴主播粉絲基礎和魅力販賣「信任」。</p>
                         </div>
-                        <div class="bg-red-900/30 p-3 rounded-md border border-red-500/50"> 
-                            <h5 class="font-semibold text-red-400 text-xs mb-1">核心風險</h5> 
-                            <p class="text-red-300 text-xs">觀眾已疲勞，且 KOL 翻車事件頻傳，風險極高。</p> 
+                        <div class="risk-box bg-red-900/30 p-4 rounded-md border border-red-500/50">
+                            <h5 class="font-semibold text-red-400 mb-1">核心風險</h5>
+                            <p class="text-red-300 text-sm">觀眾已疲勞，且 KOL 翻車事件頻傳，風險極高。</p>
                         </div>
                     </div>
                     <!-- 困局三 -->
-                    <div class="card card-hover p-6 kuju-card !bg-gray-800"> 
-                         <div>
-                            <h4 class="text-gray-100 text-lg">3. 專業知識型</h4> 
-                            <p class="text-tertiary text-xs mb-4">主播是某領域專家（美妝師、3C達人）。</p> 
+                    <div class="card card-hover kuju-card !bg-gray-800">
+                        <div>
+                            <h4 class="text-gray-100">3. 專業知識型</h4>
+                            <p class="text-tertiary mb-4">主播是某領域專家（美妝師、3C達人）。</p>
                         </div>
-                        <div class="bg-red-900/30 p-3 rounded-md border border-red-500/50"> 
-                            <h5 class="font-semibold text-red-400 text-xs mb-1">核心風險</h5> 
-                            <p class="text-red-300 text-xs">受眾垂直，不適用於品項繁雜，無法規模化。</p> 
+                        <div class="risk-box bg-red-900/30 p-4 rounded-md border border-red-500/50">
+                            <h5 class="font-semibold text-red-400 mb-1">核心風險</h5>
+                            <p class="text-red-300 text-sm">受眾垂直，不適用於品項繁雜，無法規模化。</p>
                         </div>
                     </div>
                 </div>
-                 <p class="text-center text-secondary mt-12 italic text-xs">結論：市場現有的戰術，要麼<span class="highlight">「沒利潤」</span>，要麼<span class="highlight">「高風險」</span>，要麼<span class="highlight">「不適用」</span>。這為我們的 「議題驅動型」 戰略創造了獨一無二的藍海切入建議點。</p> 
+                <p class="text-center text-secondary mt-12 italic">結論：市場現有的戰術，要麼<span class="highlight">「沒利潤」</span>，要麼<span class="highlight">「高風險」</span>，要麼<span class="highlight">「不適用」</span>。這為我們的 「議題驅動型」 戰略創造了獨一無二的藍海切入建議點。</p>
             </div>
 
-            <div class="mb-20 card p-12 bg-gray-800/50 border-l-8 border-blue-500 shadow-inner"> 
+            <div class="mb-20 card p-12 bg-gray-800/50 border-l-8 border-blue-500 shadow-inner">
                 <h3 class="text-center !text-gray-100">戰略合理性：為何「議題驅動型」是藍海？</h3>
-                <p class="text-center text-secondary mb-10 text-sm">此戰略之所以合理且具備藍海潛力，原因如下：</p> 
-                <div class="grid md:grid-cols-3 gap-10 text-center"> 
+                <p class="text-center text-secondary mb-10">此戰略之所以合理且具備藍海潛力，原因如下：</p>
+                <div class="grid md:grid-cols-3 gap-10 text-center">
                     <div>
                         <h4 class="text-blue-400 !mb-3">避開「價格戰」</h4>
-                        <p class="text-tertiary text-xs">不比「+1」，比「故事」。鎖定重情感、高客單價客群。</p> 
+                        <p class="text-tertiary">不比「+1」，比「故事」。鎖定重情感、高客單價客群。</p>
                     </div>
                     <div>
                         <h4 class="text-blue-400 !mb-3">解決「人設疲勞」</h4>
-                        <p class="text-tertiary text-xs">「不立人設」，打造「故事IP」。更安全、可複製。</p> 
+                        <p class="text-tertiary">「不立人設」，打造「故事IP」。更安全、可複製。</p>
                     </div>
                     <div>
                         <h4 class="text-blue-400 !mb-3">比「專業型」更廣泛</h4>
-                        <p class="text-tertiary text-xs">販賣「軟共鳴」，而非「硬知識」。包容所有產品。</p> 
+                        <p class="text-tertiary">販賣「軟共鳴」，而非「硬知識」。包容所有產品。</p>
                     </div>
                 </div>
             </div>
 
-            <div class="mb-20 card p-12"> 
+            <div class="mb-20 card p-12">
                 <h3 class="text-center">3. 2025 年趨勢洞察：真實性 > 娛樂性</h3>
-                <p class="text-center text-secondary mb-12 text-sm">展望未來，兩大趨勢正主導市場：</p> 
-                <div class="flex flex-col md:flex-row justify-center gap-14 mb-12"> 
-                     <div class="text-center flex-1 card p-8 bg-gray-800 border-gray-700 shadow-lg"> 
+                <p class="text-center text-secondary mb-12">展望未來，兩大趨勢正主導市場：</p>
+                <div class="flex flex-col md:flex-row justify-center gap-8 mb-12">
+                    <div class="text-center flex-1 card p-8 bg-gray-800 border-gray-700 shadow-lg">
                         <h4 class="text-gray-100">真實性 (Authenticity)</h4>
-                        <p class="text-secondary text-xs max-w-xs mx-auto">消費者厭倦過度包裝，轉而信任能提供真實價值、解決實際問題的「創作者主導內容」。</p> 
+                        <p class="text-secondary max-w-xs mx-auto">消費者厭倦過度包裝，轉而信任能提供真實價值、解決實際問題的「創作者主導內容」。</p>
                     </div>
-                     <div class="text-center flex-1 card p-8 bg-gray-800 border-gray-700 shadow-lg"> 
+                    <div class="text-center flex-1 card p-8 bg-gray-800 border-gray-700 shadow-lg">
                         <h4 class="text-gray-100">無縫整合 (Seamless Integration)</h4>
-                        <p class="text-secondary text-xs max-w-xs mx-auto">縮短行銷漏斗，讓「產品探索」與「即時轉換」無縫發生在內容體驗中。</p> 
+                        <p class="text-secondary max-w-xs mx-auto">縮短行銷漏斗，讓「產品探索」與「即時轉換」無縫發生在內容體驗中。</p>
                     </div>
                 </div>
-                <p class="text-xs font-medium text-blue-300 text-center p-6 bg-blue-900/30 rounded-lg border border-blue-500/50"> 
+                <p class="font-medium text-blue-300 text-center p-6 bg-blue-900/30 rounded-lg border border-blue-500/50">
                     <strong class="font-semibold">結論</strong>：此趨勢驗證了我們「不立人設」的戰略。一個「真實感」的敘事引擎，結合「短影音引流 -> 直播間下單」的無縫整合，是 2025 年的致勝關鍵。
                 </p>
             </div>
-
-            <div>
+            
+            <div class="mt-20">
                 <h3 class="text-center">4. 議聲科技 的獨特定位：破局之策</h3>
-                 <!-- Stacking Layout -->
-                <div class="grid grid-cols-1 gap-12 max-w-4xl mx-auto"> 
-                     <div class="card p-12 border-2 border-red-500/50 bg-red-900/20"> 
-                        <h3 class="positioning-title text-red-400">舊定位：低價雜貨鋪 (致命弱點)</h3> 
-                        <p class="text-secondary mb-6 text-sm"><strong class="font-semibold text-gray-300">挑戰</strong>：(統編 53408718) 營業項目繁雜，涵蓋汽配、電子至零售業，難以建立單一「品牌專家」形象。</p> 
-                        <ul class="list-disc list-inside space-y-3 text-secondary text-xs"> 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-6xl mx-auto mt-12 relative">
+                    
+                    <!-- 左側：舊定位 -->
+                    <div class="card p-8 md:p-10 border-2 border-red-500/50 bg-red-900/20 flex flex-col">
+                        <h3 class="!text-red-400 text-2xl">舊定位：低價雜貨鋪 (致命弱點)</h3>
+                        <p class="text-secondary mb-6"><strong class="font-semibold text-gray-300">挑戰</strong>：營業項目繁雜，難以建立單一「品牌專家」形象。</p>
+                        <ul class="list-disc list-inside space-y-3 text-secondary text-sm">
                             <li>品項繁雜，火力難集中</li>
                             <li>觀眾以為「低價雜貨鋪」而流失</li>
                             <li>被迫陷入「價格戰」紅海</li>
                         </ul>
                     </div>
-                    <div class="card p-12 border-2 border-green-500/50 bg-green-900/20"> 
-                        <h3 class="positioning-title text-green-400">新定位：專業選品策展人 (最強優勢)</h3> 
-                        <p class="text-secondary mb-6 text-sm"><strong class="font-semibold text-gray-300">戰略轉化</strong>：將「弱點」轉化為「優勢」。最佳定位不應是「品牌方」，而應是 <span class="emphasis">「專業選品策展人」 (Expert Curator)</span>。</p> 
-                        <p class="text-secondary mb-6 text-sm"><strong class="font-semibold text-gray-300">核心價值</strong>：過度的強調產品功能並沒有助於業績成長的實質意義，好的「策展人」可以合理地橫跨所有品類。我們向受眾承諾的核心價值，不是「單一產品的專業」，而是<span class="emphasis">「為你挑選高 CP 值、功能實用好物的能力」</span>。</p> 
+                    
+                    <!-- 右側：新定位 -->
+                    <div class="card p-8 md:p-10 border-2 border-green-500/50 bg-green-900/20 flex flex-col">
+                        <h3 class="!text-green-400 text-2xl">新定位：專業選品策展人 (最強優勢)</h3>
+                        <p class="text-secondary mb-6"><strong class="font-semibold text-gray-300">戰略轉化</strong>：將「弱點」轉化為「優勢」，成為 <strong class="emphasis">「專業選品策展人」</strong>。</p>
+                        <p class="text-secondary"><strong class="font-semibold text-gray-300">核心價值</strong>：我們承諾的不是「單一產品的專業」，而是<strong class="emphasis">「為你挑選高 CP 值好物的能力」</strong>。</p>
+                    </div>
+
+                    <!-- 中間的轉化箭頭 -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center justify-center
+                                w-20 h-20 bg-gray-900 border-2 border-blue-500 rounded-full shadow-lg shadow-blue-500/30">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
                     </div>
                 </div>
             </div>
@@ -412,38 +379,38 @@
 
         <!-- 戰略 (The Solution) -->
         <section id="strategy">
-             <h3>二、【核心戰略】：打破戲劇式影音的窠臼</h2>
+            <h2>二、【核心戰略】：打破戲劇式影音的窠臼</h2>
             
-            <div class="card p-16"> 
-                <div class="grid md:grid-cols-2 gap-16 mb-16"> 
+            <div class="card p-12 md:p-16 max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 mb-12">
                     <div>
-                        <h2 class="mb-6">1. 總體框架</h2>
-                        <p class="text-3xl text-blue-400 font-bold">「議題驅動 > 產品推銷」</p> 
+                        <h3 class="mb-6">1. 總體框架</h3>
+                        <p class="text-3xl text-blue-400 font-bold">「<span class="emphasis">議題驅動 > 產品推銷</span>」</p>
                     </div>
                     <div>
                         <h3 class="mb-6">2. 三大內容支柱 (基於策展人)</h3>
-                        <ul class="list-none space-y-4 text-xl text-secondary"> 
-                            <li class="flex items-start"><span class="text-blue-400 text-2xl mr-4 mt-1 leading-none">❖</span> 破解資訊不對稱 (撿便宜)</li>
-                            <li class="flex items-start"><span class="text-blue-400 text-2xl mr-4 mt-1 leading-none">❖</span> Aha Moment 展示 (功能實用)</li>
-                            <li class="flex items-start"><span class="text-blue-400 text-2xl mr-4 mt-1 leading-none">❖</span> 主動預測需求 (觀眾所需)</li>
+                        <ul class="list-none space-y-4 text-xl text-secondary">
+                            <li class="flex items-start"><span class="text-blue-400 text-2xl mr-4 mt-1 leading-none">❖</span> 破解資訊不對稱</li>
+                            <li class="flex items-start"><span class="text-blue-400 text-2xl mr-4 mt-1 leading-none">❖</span> Aha Moment 展示</li>
+                            <li class="flex items-start"><span class="text-blue-400 text-2xl mr-4 mt-1 leading-none">❖</span> 主動預測需求</li>
                         </ul>
                     </div>
                 </div>
-                <hr class="my-16 border-gray-800"> 
+                <hr class="my-12 border-gray-800">
                 <div>
-                    <h3 class="mb-12">3. 敘事引擎：「不立人設，打造故事 IP」</h3> 
-                    <div class="grid md:grid-cols-3 gap-12"> 
-                        <div class="card p-8 bg-gray-800 border-gray-700"> 
+                    <h3 class="mb-10">3. 敘事引擎：「<span class="emphasis">不立人設，打造故事 IP</span>」</h3>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="card p-6 bg-gray-800 border-gray-700">
                             <h4 class="text-gray-100">核心機制</h4>
-                            <p class="text-secondary text-xs">主播「自揭瘡疤」(Self-disclosure)。</p> 
+                            <p class="text-secondary">主播「<strong class="highlight">自揭瘡疤</strong>」(Self-disclosure)。</p>
                         </div>
-                        <div class="card p-8 bg-gray-800 border-gray-700"> 
+                        <div class="card p-6 bg-gray-800 border-gray-700">
                             <h4 class="text-gray-100">執行流程</h4>
-                            <p class="text-secondary text-xs">鉤子 → 共鳴 → 轉折 → 轉化。</p> 
+                            <p class="text-secondary">鉤子 (Hook) → 共鳴 (Resonance) → 轉折 (Turning Point) → 轉化 (Conversion)。</p>
                         </div>
-                        <div class="card p-8 bg-gray-800 border-gray-700"> 
+                        <div class="card p-6 bg-gray-800 border-gray-700">
                             <h4 class="text-gray-100">戰略優勢</h4>
-                            <p class="text-secondary text-xs">高黏著度、可替換性。</p> 
+                            <p class="text-secondary">高黏著度、可替換性。</p>
                         </div>
                     </div>
                 </div>
@@ -452,367 +419,394 @@
 
         <!-- 戰術佈局 (Tactical Layout) -->
         <section id="tactics">
-             <h2>三、【戰術佈局】：我們的作戰地圖</h2> 
-             <p class="text-xl text-center text-secondary mb-6">1. 雙引擎模型：「短影音 (獲客) + 直播 (轉換)」</p> 
-             <p class="text-lg text-center text-secondary mb-20 max-w-4xl mx-auto">2. 平台任務劃分：三大平台功能迥異，需扮演不同角色，形成連貫漏斗。點擊下方平台查看分工。</p> 
+            <h2>三、【戰術佈局】：我們的作戰地圖</h2>
+            <!-- 校正：將 <p> 改為 <h3>，並使用 text-center -->
+            <h3 class="!text-center !text-2xl">1. 雙引擎模型：「短影音 (獲客) + 直播 (轉換)」</h3>
+            <h3 class="!text-center !text-2xl !text-gray-200">2. 平台任務劃分</h3>
+            <p class="text-base text-center text-secondary mb-16 max-w-4xl mx-auto">三大平台功能迥異，需扮演不同角色，形成連貫漏斗。點擊下方平台查看分工。</p>
             
             <!-- 平台互動區 -->
-            <div class="grid lg:grid-cols-3 gap-12 mb-16"> 
+            <div class="grid lg:grid-cols-3 gap-8 mb-12 max-w-6xl mx-auto">
                 <div id="card-tiktok" class="platform-card card-hover !bg-gray-800 text-white" onclick="showPlatformDetails('tiktok')">
-                    <h3 class="mb-4 !text-gray-100 text-2xl">1. 抖音 (TikTok)</h3> 
-                    <p class="text-lg font-medium text-gray-300 mb-6">引爆共鳴與快速擴散</p> 
-                    <span class="text-xs font-semibold bg-white text-gray-800 px-4 py-1.5 rounded-full shadow">流量放大器</span> 
+                    <h3 class="mb-4 !text-gray-100 text-2xl">1. 抖音 (TikTok)</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-6">引爆共鳴與快速擴散</p>
+                    <span class="text-sm font-semibold bg-white text-gray-800 px-4 py-1.5 rounded-full shadow">流量放大器</span>
                 </div>
-                 <div id="card-ig" class="platform-card card-hover !bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 text-white" onclick="showPlatformDetails('ig')">
-                     <h3 class="mb-4 !text-white text-2xl">2. IG (Instagram)</h3> 
-                     <p class="text-lg font-medium text-gray-300 mb-6">建立深度認同與嚮往</p> 
-                     <span class="text-xs font-semibold bg-white/90 text-purple-900 px-4 py-1.5 rounded-full shadow">信任培養皿</span> 
-                 </div>
-                <div id="card-shopee" class="platform-card card-hover !bg-orange-700 text-white" onclick="showPlatformDetails('shopee')">
-                    <h3 class="mb-4 !text-white text-2xl">3. 蝦皮直播 (Shopee)</h3> 
-                    <p class="text-lg font-medium text-orange-100 mb-6">收攏流量與完成變現</p> 
-                    <span class="text-xs font-semibold bg-white text-orange-700 px-4 py-1.5 rounded-full shadow">消費收銀台</span> 
+                <div id="card-ig" class="platform-card card-hover" onclick="showPlatformDetails('ig')">
+                    <h3 class="mb-4 !text-white text-2xl">2. IG (Instagram)</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-6">建立深度認同與嚮往</p>
+                    <span class="text-sm font-semibold bg-white/90 text-purple-900 px-4 py-1.5 rounded-full shadow">信任培養皿</span>
+                </div>
+                <div id="card-shopee" class="platform-card card-hover" onclick="showPlatformDetails('shopee')">
+                    <h3 class="mb-4 !text-white text-2xl">3. 蝦皮直播 (Shopee)</h3>
+                    <p class="text-lg font-medium text-orange-100 mb-6">收攏流量與完成變現</p>
+                    <span class="text-sm font-semibold bg-white text-orange-700 px-4 py-1.5 rounded-full shadow">消費收銀台</span>
                 </div>
             </div>
 
             <!-- 動態細節顯示區 -->
-            <div id="platform-details-container" class="card min-h-[400px] transition-all duration-300"> 
-                <div id="platform-details-header" class="p-8 rounded-t-xl transition-all duration-300 border-b border-gray-800"> 
-                    <h3 id="platform-title" class="text-2xl font-bold mb-0"></h3> 
+            <div id="platform-details-container" class="card min-h-[300px] md:min-h-[250px] transition-all duration-300 max-w-6xl mx-auto">
+                <div id="platform-details-header" class="p-8 rounded-t-xl transition-all duration-300 border-b border-gray-800">
+                    <h3 id="platform-title" class="text-2xl font-bold mb-0"></h3>
                 </div>
-                <div id="platform-details-content" class="p-8"> 
+                <div id="platform-details-content" class="p-8">
                     <!-- JS will populate this -->
-                    <p class="text-lg text-center text-gray-500 pt-20">請點擊上方任一平台，查看其戰略細節分工。</p> 
+                    <p class="text-lg text-center text-gray-500 pt-20">請點擊上方任一平台，查看其戰略細節分工。</p>
                 </div>
             </div>
-        </section> <!-- End of Section III -->
+        </section>
 
-        <section id="strategy-master-plan"> 
-            <h2>四、【自媒體平台行銷戰略總綱】</h2> 
-             <p class="text-lg text-center text-secondary mb-20 max-w-4xl mx-auto">在前一章節的戰略框架下，抖音和 IG 的具體分工，是一個「攻擊手」與「助攻手」的搭配。</p> 
+        <!-- 平台總綱 (Strategy Master Plan) -->
+        <section id="strategy-master-plan">
+            <h2>四、【自媒體平台行銷戰略總綱】</h2>
+            <p class="text-lg text-center text-secondary mb-16 max-w-4xl mx-auto">在前一章節的戰略框架下，抖音和 IG 的具體分工，是一個「攻擊手」與「助攻手」的搭配。</p>
 
-             <!-- Stacking Layout -->
-             <div class="grid grid-cols-1 gap-12 mb-20 max-w-5xl mx-auto"> 
-                 <div class="card p-12 bg-gray-800 text-white"> 
-                     <h3 class="!text-gray-100">抖音 (TikTok) = 廣域「攻擊手」 / 「破口」</h3>
-                     <p class="text-lg font-medium text-gray-300 mb-6"><strong>唯一目標：</strong>破圈、擴散、導流。</p> 
-                     <p class="text-lg font-medium text-gray-300 mb-10"><strong>操作心法：「一刀斃命」。</strong></p> 
-                     <h4 class="font-bold mb-4 text-xl text-gray-100">具體細節分工：</h4> 
-                     <ul class="list-disc list-inside space-y-4 text-xs text-gray-300"> 
-                         <li><strong class="font-semibold text-gray-100">內容的極致濃縮：</strong>任何關於「主播的故事」，在抖音上不能講完整。必須把這個故事濃縮成一個 15 秒的「情緒切片」。<br/><em class="text-gray-400 text-xs">範例：只拍「深夜獨自看情侶合照流淚」鏡頭。</em></li>
-                         <li><strong class="font-semibold text-gray-100">販賣「純粹的焦慮」：</strong>抖音內容不提供解方。任務是讓觀眾產生「這根本就是在演我」的共鳴。</li>
-                         <li><strong class="font-semibold text-gray-100">CTA (行動呼籲) 的唯一性：</strong>結尾 CTA 都是「導流到 IG」。<br/><em class="text-gray-400 text-xs">話術：「我曾經也像這樣...故事在 IG (主頁連結)。」</em></li>
-                     </ul>
-                 </div>
-                 <div class="card p-12 bg-gradient-to-br from-purple-950 via-pink-950 to-orange-950 text-white border border-purple-800/50"> 
-                     <h3 class="!text-purple-300">IG (Instagram) = 深度「助攻手」 / 「信任培養皿」</h3>
-                     <p class="text-lg font-medium text-gray-300 mb-6"><strong>唯一目標：</strong>承接流量、建立信任、培養黏著度。</p> 
-                      <p class="text-lg font-medium text-gray-300 mb-10"><strong>操作心法：「營造真實世界」。</strong></p> 
-                     <h4 class="font-bold mb-4 text-xl text-gray-100">具體細節分工：</h4> 
-                     <ul class="list-disc list-inside space-y-4 text-xs text-gray-300"> 
-                         <li><strong class="font-semibold text-gray-100">承接「尋求解方」流量：</strong>從抖音來的觀眾帶著「焦慮」和「好奇心」。</li>
-                         <li><strong class="font-semibold text-gray-100">用 Stories 打造「真實感」：</strong>展示「強化自我」的過程，而非結果。<br/><em class="text-gray-400 text-xs">範例：隨手分享運動、研究產品、心情。</em></li>
-                         <li><strong class="font-semibold text-gray-100">用 Reels 塑造「嚮往感」：</strong>展示「強化的結果」。精緻短片。<br/><em class="text-gray-400 text-xs">範例：化妝轉變、自信步伐。</em></li>
-                         <li><strong class="font-semibold text-gray-100">CTA (行動呼籲) 的轉化：</strong>導向「蝦皮直播間」。<br/><em class="text-gray-400 text-xs">話術：「我的『戰袍』...今晚 8 點直播分享。」</em></li>
-                     </ul>
-                 </div>
-             </div>
-
-            <div class="card p-12"> 
-                 <h3 class="text-center">總結：一個完整的用戶旅程</h3>
-                 <!-- Compact User Journey List -->
-                 <ol class="journey-list max-w-2xl mx-auto">
-                     <li class="journey-item">
-                         <span class="journey-icon !bg-gray-700">1</span>
-                         <div>
-                            <h4 class="font-bold text-lg text-gray-100">TikTok (觸及)</h4> 
-                            <p class="text-xs text-secondary">用戶 A 被「深夜痛哭」15 秒影片打動，產生共鳴。</p> 
-                         </div>
-                     </li>
-                      <li class="journey-item">
-                         <span class="journey-icon !bg-purple-700">2</span>
-                         <div>
-                            <h4 class="font-bold text-lg text-gray-100">導流 (IG)</h4> 
-                            <p class="text-xs text-secondary">點擊連結追蹤 IG，想看「解方」。</p> 
-                         </div>
-                     </li>
-                     <li class="journey-item">
-                         <span class="journey-icon !bg-purple-700">3</span>
-                         <div>
-                             <h4 class="font-bold text-lg text-gray-100">IG (培養)</h4> 
-                             <p class="text-xs text-secondary">看 Stories (真實) 和 Reels (嚮往)，建立「信任」。</p> 
-                         </div>
-                     </li>
-                    <li class="journey-item">
-                         <span class="journey-icon !bg-orange-600">4</span>
-                          <div>
-                            <h4 class="font-bold text-lg text-gray-100">導流 (蝦皮)</h4> 
-                            <p class="text-xs text-secondary">主播在 IG 預告：「今晚蝦皮直播分享秘訣」。</p> 
-                         </div>
-                     </li>
-                     <li class="journey-item">
-                        <span class="journey-icon !bg-orange-600">5</span>
-                         <div>
-                            <h4 class="font-bold text-lg text-gray-100">蝦皮 (收割)</h4> 
-                            <p class="text-xs text-secondary">用戶 A 帶「信任」與「渴望」進直播間，主播重述故事、拿出產品，消費動機達頂峰。</p> 
-                         </div>
-                     </li>
-                 </ol>
-                 <!-- End Compact User Journey -->
-                  <p class="text-center text-secondary mt-12 italic font-semibold text-xs">結論：抖音負責「破門」，IG 負責「待客與說服」，最後由蝦皮「收單」。這個分工能確保情感衝擊和信任建立，在不同階段被最大化。</p> 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 max-w-6xl mx-auto">
+                <div class="card p-8 md:p-10 bg-gray-800 text-white">
+                    <h3 class="!text-gray-100">抖音 (TikTok) = 廣域「<span class="highlight">攻擊手</span>」</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-4"><strong>唯一目標：</strong>破圈、擴散、導流。</p>
+                    <p class="text-lg font-medium text-gray-300 mb-8"><strong>操作心法：「<span class="highlight">一刀斃命</span>」。</strong></p>
+                    <h4 class="font-bold mb-4 text-xl text-gray-100">具體細節分工：</h4>
+                    <ul class="list-disc list-inside space-y-4 text-gray-300">
+                        <li><strong class="font-semibold text-gray-100">內容的極致濃縮：</strong>15 秒「<strong class="highlight">情緒切片</strong>」。<br/><em class="text-gray-400">範例：只拍「深夜獨自看情侶合照流淚」鏡頭。</em></li>
+                        <li><strong class="font-semibold text-gray-100">販賣「純粹的焦慮」：</strong>不提供解方，只求共鳴。</li>
+                        <li><strong class="font-semibold text-gray-100">CTA (行動呼籲) 的唯一性：</strong>結尾 CTA 都是「<strong class="emphasis">導流到 IG</strong>」。<br/><em class="text-gray-400">話術：「我曾經也像這樣...故事在 IG。」</em></li>
+                    </ul>
+                </div>
+                <div class="card p-8 md:p-10 bg-gradient-to-br from-purple-950 via-pink-950 to-orange-950 text-white border border-purple-800/50">
+                    <h3 class="!text-purple-300">IG (Instagram) = 深度「<span class="emphasis">助攻手</span>」</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-4"><strong>唯一目標：</strong>承接流量、建立信任、培養黏著度。</p>
+                    <p class="text-lg font-medium text-gray-300 mb-8"><strong>操作心法：「<span class="emphasis">營造真實世界</span>」。</strong></p>
+                    <h4 class="font-bold mb-4 text-xl text-gray-100">具體細節分工：</h4>
+                    <ul class="list-disc list-inside space-y-4 text-gray-300">
+                        <li><strong class="font-semibold text-gray-100">承接「尋求解方」流量：</strong>從抖音來的觀眾帶著「焦慮」和「好奇心」。</li>
+                        <li><strong class="font-semibold text-gray-100">用 Stories 打造「真實感」：</strong>展示「強化自我」的過程。<br/><em class="text-gray-400">範例：隨手分享運動、研究產品、心情。</em></li>
+                        <li><strong class="font-semibold text-gray-100">用 Reels 塑造「嚮往感」：</strong>展示「強化的結果」。<br/><em class="text-gray-400">範例：化妝轉變、自信步伐。</em></li>
+                        <li><strong class="font-semibold text-gray-100">CTA (行動呼籲) 的轉化：</strong>導向「<strong class="emphasis">蝦皮直播間</strong>」。<br/><em class="text-gray-400">話術：「我的『戰袍』...今晚 8 點直播分享。」</em></li>
+                    </ul>
+                </div>
             </div>
-        </section> <!-- End of Section IV -->
 
-        <section id="allocation"> 
-            <h2>五、【11 月 影片配額建議】</h2> 
-             <p class="text-lg text-center text-secondary mb-20 max-w-4xl mx-auto">基於雙平台戰術，規劃 11 月 22 支核心主題影片的製作與發布策略。</p> 
-            <div class="grid lg:grid-cols-2 gap-16 items-center mb-20"> 
-                <div class="card p-12"> 
-                    <h4 class="text-center">內容配比：IP 建立 vs. 議題戰術</h4>
-                    <div class="chart-container mt-10"> 
+            <div class="card p-8 md:p-12">
+                <h3 class="text-center">總結：一個完整的用戶旅程漏斗</h3>
+                <div class="mt-12 space-y-8 max-w-3xl mx-auto">
+                    <!-- Step 1: TikTok -->
+                    <div class="flex items-center gap-6">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center bg-gray-700 text-white text-2xl font-bold shadow-lg">1</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-lg text-gray-100">TikTok (觸及)</h4>
+                            <p class="text-secondary">用戶 A 被 15 秒「情緒切片」影片打動，產生強烈共鳴。</p>
+                        </div>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="pl-8"><div class="w-1 h-10 bg-gray-700 ml-7"></div></div>
+                    <!-- Step 2 & 3: Instagram -->
+                    <div class="flex items-center gap-6">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-700 to-pink-700 text-white text-2xl font-bold shadow-lg">2</div>
+                        <div class="flex-1 bg-gray-800 p-6 rounded-lg border border-gray-700">
+                            <h4 class="font-bold text-lg text-purple-300">IG (導流與培養)</h4>
+                            <p class="text-secondary">用戶點擊連結追蹤 IG，透過 Stories (真實感) 和 Reels (嚮往感) 的內容，從「共鳴」轉變為「信任」。</p>
+                        </div>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="pl-8"><div class="w-1 h-10 bg-gray-700 ml-7"></div></div>
+                    <!-- Step 4 & 5: Shopee -->
+                    <div class="flex items-center gap-6">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center bg-orange-600 text-white text-2xl font-bold shadow-lg">3</div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-lg text-orange-300">蝦皮 (收割)</h4>
+                            <p class="text-secondary">用戶帶著「信任」和「對解方的渴望」進入直播間，主播重述故事並展示「戰袍」，消費動機在此刻達到頂峰。</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-secondary mt-12 italic font-semibold">結論：抖音負責「<span class="highlight">破門</span>」，IG 負責「<span class="highlight">待客與說服</span>」，最後由蝦皮「<span class="highlight">收單</span>」。這個分工能確保情感衝擊和信任建立，在不同階段被最大化。</p>
+            </div>
+        </section>
+
+        <!-- 影片配額 (Video Allocation) -->
+        <section id="allocation">
+            <h2>五、【11 月 影片配額建議】</h2>
+            <p class="text-lg text-center text-secondary mb-16 max-w-4xl mx-auto">基於雙平台戰術，規劃 11 月 22 支核心主題影片的製作與發布策略。</p>
+            <div class="grid lg:grid-cols-2 gap-12 items-center mb-16 max-w-6xl mx-auto">
+                <div class="card p-10">
+                    <h4 class="text-center text-gray-100">內容配比：IP 建立 vs. 議題戰術</h4>
+                    <div class="chart-container mt-8">
                         <canvas id="contentDoughnut"></canvas>
                     </div>
                 </div>
-                <div class="card p-12"> 
+                <div class="card p-10">
                     <h4 class="text-gray-100">核心原則：一魚兩吃</h4>
-                    <p class="text-secondary mb-6 text-sm">總製作 <strong class="font-semibold text-gray-300">22 個「主題」</strong> 影片素材，用「一魚兩吃」剪輯法發揮最大效益。</p> 
-                    <ul class="list-disc list-inside space-y-4 text-base"> 
-                        <li class="text-gray-100"><strong class="font-semibold">A. IP 建立 (15 支)</strong>
-                            <ul class="list-disc list-inside ml-8 text-sm text-secondary space-y-2"> 
+                    <p class="text-secondary mb-6">總製作 <strong class="font-semibold text-gray-300">22 個「主題」</strong> 影片素材，用「一魚兩吃」剪輯法發揮最大效益。</p>
+                    <ul class="list-none space-y-4">
+                        <li class="text-gray-100"><strong class="font-semibold text-lg">A. IP 建立 (15 支)</strong>
+                            <ul class="list-disc list-inside ml-6 mt-2 text-sm text-secondary space-y-2">
                                 <li>7 支 破解資訊 (IG 獨佔)</li>
                                 <li>8 支 產品神用法 (雙平台)</li>
                             </ul>
                         </li>
-                        <li class="text-gray-100"><strong class="font-semibold">B. 議題戰術 (7 支)</strong>
-                            <ul class="list-disc list-inside ml-8 text-sm text-secondary space-y-2"> 
+                        <li class="text-gray-100"><strong class="font-semibold text-lg">B. 議題戰術 (7 支)</strong>
+                            <ul class="list-disc list-inside ml-6 mt-2 text-sm text-secondary space-y-2">
                                 <li>4 支 11/11 脫單焦慮 (雙平台)</li>
                                 <li>3 支 年底預熱焦慮 (雙平台)</li>
                             </ul>
                         </li>
                     </ul>
-                    <div class="mt-10 p-6 bg-gray-800 rounded-lg border border-gray-700"> 
-                        <p class="font-semibold text-gray-100 mb-3 text-base">總結發布數量：</p> 
-                        <p class="text-sm text-secondary"><strong class="text-gray-100">TikTok (發布 15 支):</strong> 100% 高衝擊「鉤子」，只導流。</p> 
-                        <p class="text-sm text-secondary"><strong class="text-purple-300">IG (發布 22 支):</strong> 承接流量，提供「解方」，建信任。</p> 
-                        <p class="text-xs text-tertiary mt-4">(註：15 支影片雙平台不同剪輯，7 支 IG 獨佔，總計 22 個核心主題)</p> 
+                    <div class="mt-8 p-6 bg-gray-800 rounded-lg border border-gray-700">
+                        <p class="font-semibold text-gray-100 mb-3">總結發布數量：</p>
+                        <p class="text-sm text-secondary"><strong class="text-gray-100">TikTok (發布 15 支):</strong> 100% 高衝擊「鉤子」，只導流。</p>
+                        <p class="text-sm text-secondary"><strong class="text-purple-300">IG (發布 22 支):</strong> 承接流量，提供「解方」，建信任。</p>
                     </div>
                 </div>
             </div>
 
-            <div class="card accordion-wrapper"> 
+            <!-- 補全：手風琴內容 -->
+            <div class="card accordion-wrapper max-w-6xl mx-auto">
+                <!-- 項目 1 -->
                 <div>
                     <button class="accordion-toggle collapsed" id="accordion-v1-toggle">
-                        <h4 class="text-xl font-bold text-gray-100 mb-0">A.1. 破解資訊 (7 支)</h4> 
-                        <span class="text-2xl text-gray-400 accordion-icon">+</span> 
+                        <h4 class="text-xl font-bold text-gray-100 mb-0">A.1. 破解資訊 (7 支)</h4>
+                        <span class="text-2xl text-gray-400 accordion-icon">+</span>
                     </button>
-                    <div class="accordion-content hidden" id="accordion-v1-content">
-                        <ul class="list-disc list-inside space-y-3 text-xs text-secondary"> 
-                            <li><strong class="font-semibold text-gray-300">戰術分析：</strong>建立「策展人」專業形象關鍵。TikTok 無法講清。</li>
-                            <li><strong class="font-semibold text-gray-300">平台配置：</strong>IG Reels 獨佔 (7 支)</li>
-                            <li><strong class="font-semibold text-gray-300">執行：</strong>以「專家」口吻講解「省錢/避坑」知識點。</li>
-                            <li><strong class="font-semibold text-gray-300">目的：</strong>建立信任，吸引「儲存」與「分享」，鞏固 IP。</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div>
-                    <button class="accordion-toggle collapsed" id="accordion-v2-toggle">
-                         <h4 class="text-xl font-bold text-gray-100 mb-0">A.2. 產品神用法 (8 支)</h4> 
-                        <span class="text-2xl text-gray-400 accordion-icon">+</span> 
-                    </button>
-                    <div class="accordion-content hidden" id="accordion-v2-content">
-                        <ul class="list-disc list-inside space-y-3 text-xs text-secondary"> 
-                            <li><strong class="font-semibold text-gray-300">戰術分析：</strong>最適合「雙平台」操作，可「一魚兩吃」。</li>
-                            <li><strong class="font-semibold text-gray-300">平台配置：</strong>雙平台共用 (8 支)</li>
-                        </ul>
-                        <div class="grid md:grid-cols-2 gap-8 mt-8"> 
-                            <div class="bg-gray-800 text-white p-8 rounded-lg shadow-lg"> 
-                                <strong class="text-xl mb-4 block">TikTok (15 秒)</strong> 
-                                <ul class="list-disc list-inside text-xs space-y-3 text-gray-300"> 
-                                    <li><strong class="font-semibold text-gray-100">執行：</strong>快節奏、卡點。只展示「Aha Moment」瞬間。</li>
-                                    <li><strong class="font-semibold text-gray-100">目的：</strong>視覺衝擊，引發好奇。</li>
-                                    <li><strong class="font-semibold text-gray-100">CTA：</strong>「想知道？看我 IG」。</li>
-                                </ul>
-                            </div>
-                             <div class="bg-gradient-to-br from-purple-950 via-pink-950 to-orange-950 text-white p-8 rounded-lg border border-purple-800/50 shadow-lg"> 
-                                <strong class="text-xl text-purple-300 mb-4 block">IG Reels (30-60 秒)</strong> 
-                                <ul class="list-disc list-inside text-xs space-y-3 text-gray-300"> 
-                                    <li><strong class="font-semibold text-gray-100">執行：</strong>畫面精緻，展示情境與價值。</li>
-                                    <li><strong class="font-semibold text-gray-100">目的：</strong>展示「神用法」如何「提升生活品質」。</li>
-                                    <li><strong class="font-semibold text-gray-100">CTA：</strong>「學會了嗎？今晚蝦皮直播教更多」。</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <button class="accordion-toggle collapsed" id="accordion-v3-toggle">
-                         <h4 class="text-xl font-bold text-gray-100 mb-0">B. 議題戰術內容 (7 支)</h4> 
-                        <span class="text-2xl text-gray-400 accordion-icon">+</span> 
-                    </button>
-                     <div class="accordion-content hidden" id="accordion-v3-content">
-                        <ul class="list-disc list-inside space-y-3 text-xs text-secondary"> 
-                            <li><strong class="font-semibold text-gray-300">戰術分析：</strong>「販賣焦慮」核心武器，雙平台扮演接力賽。</li>
-                            <li><strong class="font-semibold text-gray-300">平台配置：</strong>雙平台連動 (7 支, 含 4 支 11/11 脫單焦慮 + 3 支年底預熱)</li>
-                        </ul>
-                        <div class="grid md:grid-cols-2 gap-8 mt-8"> 
-                            <div class="bg-gray-800 text-white p-8 rounded-lg shadow-lg"> 
-                                <strong class="text-xl mb-4 block">TikTok (15 秒) - 「痛點鉤子」</strong> 
-                                <ul class="list-disc list-inside text-xs space-y-3 text-gray-300"> 
-                                    <li><strong class="font-semibold text-gray-100">執行：</strong>只演「痛點」。主播赤裸「情緒切片」。</li>
-                                    <li><strong class="font-semibold text-gray-100">目的：</strong>販賣純粹焦慮，引發共鳴。</li>
-                                    <li><strong class="font-semibold text-gray-100">CTA：</strong>「我曾經也這樣...故事在 IG」。</li>
-                                </ul>
-                            </div>
-                            <div class="bg-gradient-to-br from-purple-950 via-pink-950 to-orange-950 text-white p-8 rounded-lg border border-purple-800/50 shadow-lg"> 
-                                <strong class="text-xl text-purple-300 mb-4 block">IG Reels (30-60 秒) - 「強化解方」</strong> 
-                                 <ul class="list-disc list-inside text-xs space-y-3 text-gray-300"> 
-                                    <li><strong class="font-semibold text-gray-100">執行：</strong>只演「轉變」。承接痛點，展示「Glow Up 轉變」。</li>
-                                    <li><strong class="font-semibold text-gray-100">目的：</strong>提供「解方」與「嚮往感」，轉化焦慮。</li>
-                                    <li><strong class="font-semibold text-gray-100">CTA：</strong>「我的『戰袍』準備好了，今晚蝦皮直播見」。</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section> <!-- End of Section V -->
-
-        <!-- 風險控管 (Risks) -->
-        <section id="risks">
-             <h2>六、【成效衡量與風險控管】</h2>
-            <p class="text-lg text-center text-secondary mb-20 max-w-4xl mx-auto">主動管理風險，尤其法律與罰單問題，並專注於「有效轉化」數據。</p> 
-            
-            <div class="grid md:grid-cols-2 gap-16 mb-20"> 
-                <div class="card p-12 risk-card-neutral"> 
-                    <h3 class="mb-8">1. 關鍵成效衡量指標 (KPIs)</h3> 
-                    <h4 class="text-gray-100 !mb-4">前端 (TikTok / IG)：</h4> 
-                    <ul class="list-disc list-inside text-secondary space-y-2 text-xs mb-8"> 
-                        <li><strong class="font-semibold text-gray-300">引流成本 (CPC)</strong>：衡量「鉤子」效率。</li>
-                        <li><strong class="font-semibold text-gray-300">互動品質 (儲存/分享/評論)</strong>：衡量「IP」黏著度。</li>
-                    </ul>
-                    <h4 class="text-gray-100 !mb-4">後端 (蝦皮直播)：</h4> 
-                    <ul class="list-disc list-inside text-secondary space-y-2 text-xs"> 
-                        <li><strong class="font-semibold text-gray-300">轉化率 (CVR)</strong>：衡量「情感共鳴」轉化力。</li>
-                        <li><strong class="font-semibold text-gray-300">客單價 (AOV)</strong>：衡量「投資自己」意願。</li>
-                    </ul>
-                </div>
-                <div class="card p-12 risk-card-neutral"> 
-                    <h3 class="mb-8">2. 關鍵風險控管 (Risk Management)</h3> 
-                    <p class="text-base text-secondary mb-8">主動管理風險，尤其是最危險的「法律」與「罰單」問題。</p> 
-                    <ul class="list-disc list-inside text-secondary space-y-3 text-xs"> 
-                        <li><strong class="font-semibold text-gray-300">銷售風險 (B)</strong>：打造來自「故事 IP」追隨的「可持續銷售引擎」，遠比「折扣」更持久。</li>
-                        <li><strong class="font-semibold text-gray-300">輿論風險 (C)</strong>：主播「真實故事」是防火牆。核心拉回「強化自我」，而非「取悅他人」。</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card accordion-wrapper"> 
-                 <div class="rounded-t-lg">
-                    <button class="accordion-toggle collapsed rounded-t-lg risk-card-red" id="accordion-a-toggle">
-                        <h5 class="text-3xl font-bold mb-0">風險 A：【法規風險】(客戶最怕)</h3> 
-                        <span class="text-4xl text-red-400 accordion-icon">+</span> 
-                    </button>
-                    <div class="accordion-content hidden risk-card-red rounded-b-lg" id="accordion-a-content">
-                        <p class="text-secondary mb-6 text-sm"><strong>風險來源：</strong>傳統直播常誇大功效（「保證瘦」），觸犯法規。</p> 
-                        <h4 class="text-gray-100 mb-6">我們的解方 (防火牆)：</h4> 
-                        <p class="text-secondary mb-10 text-sm leading-relaxed"> 
-                            此戰略最強之處：我們<strong class="font-semibold text-gray-300">從不談論「產品功效」</strong>，只談論「主播的情感」與「強化自我的旅程」。
-                        </p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10"> 
-                            <div class="bg-red-800/30 p-8 rounded-lg border border-red-500/50"> 
-                                <strong class="text-red-300 text-lg block mb-3">錯誤示範 (觸法):</strong> 
-                                <p class="text-xs text-red-200">「這款美白霜擦了 7 天『保證』見效。」</p> 
-                            </div>
-                            <div class="bg-green-800/30 p-8 rounded-lg border border-green-500/50"> 
-                                <strong class="text-green-300 text-lg block mb-3">我們的話術 (安全):</strong> 
-                                <p class="text-xs text-green-200">「這是我低谷時用來『激勵自己』的戰袍，為了『提醒自己值得更好』。」</p> 
-                            </div>
-                        </div>
-                        <p class="mt-10 font-semibold text-green-300 text-sm p-6 bg-green-900/30 rounded-lg border border-green-500/50">結論：販賣「情感價值」與「身份認同」，而非「產品功效」，從根本規避藥事法風險。</p> 
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 11/11 緊急救援方案 (Action Plan) -->
-        <section id="action-plan">
-             <h2>七、【緊急救援方案】：11/11 光棍節專案</h2>
-            <div class="card p-16"> 
-                <div class="mb-12"> 
-                    <h3 class="mb-6">1. 專案背景</h3> 
-                    <ul class="list-disc list-inside text-secondary text-sm space-y-3"> 
-                        <li><strong class="font-semibold text-gray-300">檔期：</strong>11/11 光棍節</li>
-                        <li><strong class="font-semibold text-gray-300">主推產品：</strong>美白、健康、瘦身 相關商品</li>
-                    </ul>
-                </div>
-
-                <div class="mb-12"> 
-                    <h3 class="mb-6">2. 創意主軸：【販賣焦慮】與【解決方案】</h3> 
-                    <ul class="list-disc list-inside text-secondary text-sm space-y-3"> 
-                        <li><strong class="font-semibold text-gray-300">核心戰略確認：</strong>「主播自揭瘡疤」，圍繞「如何強化自我、才能脫離單身」核心痛點。</li>
-                        <li><strong class="font-semibold text-gray-300">戰略主軸：</strong>「你還在羨慕別人嗎？強化自我，是為了脫離單身，更是為了配得上更好的未來。」</li>
-                    </ul>
-                </div>
-                <hr class="my-16 border-gray-800"> 
-                <div>
-                    <h3 class="mb-10">3. 敘事腳本架構 與 戰術原理解析</h3> 
-                    <p class="text-secondary mb-12 text-sm leading-relaxed">為確保觀眾理解此腳本運作，腳本架構遵循核心邏輯，實現「販賣焦慮」、「建立真實感」與「提供解方」。</p> 
-                    
-                    <div class="grid md:grid-cols-2 gap-12"> 
-                        <div class="bg-gray-800 p-10 rounded-lg border border-gray-700"> 
-                            <h4 class="text-gray-100 mb-8">A. 核心腳本結構 (The How)：</h4> 
-                            <dl class="space-y-8"> 
-                                <div>
-                                    <dt class="font-semibold text-gray-100 text-lg mb-2">1. 鉤子 (Hook)：主播最赤裸故事</dt> 
-                                    <dd class="text-xs text-secondary pl-5"><strong class="font-semibold text-gray-300">執行：</strong>揭露過去真實、脆弱的情感故事。<br/><strong class="font-semibold text-gray-300">目的：</strong>快速建立「真實感」，引發投射。</dd> 
-                                </div>
-                                <div>
-                                    <dt class="font-semibold text-gray-100 text-lg mb-2">2. 轉折 (Turning Point)：強化自我</dt> 
-                                    <dd class="text-xs text-secondary pl-5"><strong class="font-semibold text-gray-300">執行：</strong>分享從谷底覺醒，領悟「與其等待，不如強化」。<br/><strong class="font-semibold text-gray-300">目的：</strong>將焦慮導向積極出口。</dd> 
-                                </div>
-                                <div>
-                                    <dt class="font-semibold text-gray-100 text-lg mb-2">3. 解方 (Solution)：提供方法</dt> 
-                                    <dd class="text-xs text-secondary pl-5"><strong class="font-semibold text-gray-300">執行：</strong>直播間產品登場，成為「裝備」。<br/><strong class="font-semibold text-gray-300">目的：</strong>將「購買」重新定義為「投資」。</dd> 
-                                </div>
-                            </dl>
-                        </div>
-
-                        <div class="bg-blue-900/30 text-gray-100 p-10 rounded-lg border border-blue-500/50"> 
-                            <h4 class="text-blue-300 mb-8">B. 戰術原理解析 (The Why)：</h4> 
-                            <ul class="list-disc list-inside space-y-5 text-secondary text-sm"> 
-                                <li class="text-gray-300"><strong class="font-semibold text-gray-100">販賣恐懼焦慮：</strong>「寵愛自己」太軟弱。直接販賣「不改變」的恐懼，創造痛感。</li>
-                                <li class="text-gray-300"><strong class="font-semibold text-gray-100">套進互動真實感：</strong>主播親身經歷引發真實互動，形成強大黏著度。</li>
-                                <li class="text-gray-300"><strong class="font-semibold text-gray-100">痛感 = 購買驅動力：</strong>將「焦慮」轉化為購買力，鎖定高價值客群。</li>
+                    <div class="accordion-content hidden p-4">
+                        <p class="text-secondary mb-4"><strong>戰術分析：</strong>這是建立「策展人」專業形象的關鍵。TikTok 的 15 秒無法講清楚，反而顯得廉價。</p>
+                        <div class="p-4 bg-gray-800 rounded-lg">
+                            <h5 class="text-purple-300">平台配置：IG Reels 獨佔 (7 支)</h5>
+                            <ul class="list-disc list-inside text-secondary mt-2 text-sm">
+                                <li><strong>執行：</strong>以「專家」、「揭秘者」的口吻，清楚講解一個「省錢/避坑」的知識點 (例如：「如何看穿假優惠」)。</li>
+                                <li><strong>目的：</strong>建立信任感，吸引觀眾「儲存」和「分享」，鞏固 IP 形象。</li>
                             </ul>
                         </div>
                     </div>
                 </div>
+                <!-- 項目 2 -->
+                <div>
+                    <button class="accordion-toggle collapsed" id="accordion-v2-toggle">
+                        <h4 class="text-xl font-bold text-gray-100 mb-0">A.2. 產品神用法 (8 支)</h4>
+                        <span class="text-2xl text-gray-400 accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content hidden p-4">
+                        <p class="text-secondary mb-4"><strong>戰術分析：</strong>這是最適合「雙平台」操作的內容，可「一魚兩吃」。</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-gray-800 rounded-lg">
+                                <h5 class="text-gray-100">TikTok (15 秒)</h5>
+                                <ul class="list-disc list-inside text-secondary mt-2 text-sm">
+                                    <li><strong>執行：</strong>快節奏、卡點。只展示「Aha Moment」的瞬間。</li>
+                                    <li><strong>目的：</strong>製造視覺衝擊，引發「這是什麼？」的好奇心。</li>
+                                    <li><strong>CTA：</strong>「想知道怎麼做的？看我 IG」。</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-gray-800 rounded-lg border border-purple-800/50">
+                                <h5 class="text-purple-300">IG Reels (30-60 秒)</h5>
+                                <ul class="list-disc list-inside text-secondary mt-2 text-sm">
+                                    <li><strong>執行：</strong>畫面精緻，展示「使用前 v.s. 使用後」的情境與價值。</li>
+                                    <li><strong>目的：</strong>展示這個「神用法」能如何「提升生活品質」。</li>
+                                    <li><strong>CTA：</strong>「你學會了嗎？今晚蝦皮直播教你更多」。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 項目 3 -->
+                <div>
+                    <button class="accordion-toggle collapsed" id="accordion-v3-toggle">
+                        <h4 class="text-xl font-bold text-gray-100 mb-0">B. 議題戰術內容 (7 支)</h4>
+                        <span class="text-2xl text-gray-400 accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content hidden p-4">
+                        <p class="text-secondary mb-4"><strong>戰術分析：</strong>這是我們的「<strong class="highlight">販賣焦慮</strong>」核心武器，必須在雙平台扮演「痛點」與「解方」的接力賽。</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-gray-800 rounded-lg">
+                                <h5 class="text-gray-100">TikTok (15 秒) - 「痛點鉤子」</h5>
+                                <ul class="list-disc list-inside text-secondary mt-2 text-sm">
+                                    <li><strong>執行：</strong>只演「痛點」。主播最赤裸的「情緒切片」。</li>
+                                    <li><strong>目的：</strong>販賣純粹的焦慮，引發強烈共鳴。</li>
+                                    <li><strong>CTA：</strong>「我曾經也這樣...我的故事放在 IG」。</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 bg-gray-800 rounded-lg border border-purple-800/50">
+                                <h5 class="text-purple-300">IG Reels (30-60 秒) - 「強化解方」</h5>
+                                <ul class="list-disc list-inside text-secondary mt-2 text-sm">
+                                    <li><strong>執行：</strong>只演「轉變」。承接 TikTok 的痛點，展示主播「強化自我」後的「Glow Up 轉變」。</li>
+                                    <li><strong>目的：</strong>提供「解方」和「嚮往感」。</li>
+                                    <li><strong>CTA：</strong>「我的『戰袍』(產品) 準備好了，今晚蝦皮直播間見」。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 風險控管 (Risk Management) - 補全 -->
+        <section id="risks">
+            <h2>六、【成效衡量與風險控管】</h2>
+            <p class="text-lg text-center text-secondary mb-16 max-w-4xl mx-auto">展現我們對「結果負責」的專業性，並前瞻性地管理客戶最在意的「核心風險」。</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto mb-16">
+                <div class="card p-8">
+                    <h3>1. 關鍵成效衡量指標 (KPIs)</h3>
+                    <p class="text-secondary mb-6">我們不看空泛的流量，我們只看「有效轉化」的數據：</p>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-blue-300">前端 (TikTok / IG)</h4>
+                            <ul class="list-disc list-inside text-secondary mt-2">
+                                <li>引流成本 (Cost per Click)：衡量「痛點鉤子」的效率。</li>
+                                <li>互動品質 (儲存/分享/評論)：衡量「故事IP」的黏著度。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-blue-300">後端 (蝦皮直播)</h4>
+                            <ul class="list-disc list-inside text-secondary mt-2">
+                                <li>直播間轉化率 (Conversion Rate)：衡量「情感共鳴」轉化「消費衝動」的比例。</li>
+                                <li>客單價 (Average Order Value)：被故事打動的觀眾，是否願意花更多錢「投資自己」。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-8">
+                    <h3>2. 關鍵風險控管 (Risk Management)</h3>
+                    <p class="text-secondary mb-6">主動管理風險，尤其是最危險的「法律」與「罰單」問題。</p>
+                    <div class="accordion-wrapper !shadow-none !border-none !bg-transparent">
+                        <!-- 風險 A -->
+                        <div class="card risk-card-red mb-4">
+                            <button class="accordion-toggle collapsed">
+                                <h3 class="text-xl font-bold mb-0">風險 A：【法規風險】</h3>
+                                <span class="text-2xl text-gray-400 accordion-icon">+</span>
+                            </button>
+                            <div class="accordion-content hidden p-4">
+                                <p class="text-secondary mb-4"><strong>風險來源：</strong>傳統直播為了銷售，常會誇大產品功效（例如「保證瘦」、「立即白」），直接觸犯法規。</p>
+                                <p class="text-secondary mb-4"><strong>我們的解方 (防火牆)：</strong>這正是我們戰略最強的地方。 我們的敘事引擎從不談論「產品功效」，我們談論的是「<strong class="emphasis">主播的情感</strong>」與「<strong class="emphasis">強化自我的旅程</strong>」。</p>
+                                <div class="p-4 bg-red-950/50 rounded-lg mb-2">
+                                    <h5 class="text-red-400">錯誤示範：</h5>
+                                    <p class="text-red-300">「這款美白霜擦了 7 天『保證』見效。」 (觸法)</p>
+                                </div>
+                                <div class="p-4 bg-green-950/50 rounded-lg">
+                                    <h5 class="text-green-400">我們的話術：</h5>
+                                    <p class="text-green-300">「這是我在人生最低谷時，用來『激勵自己』的戰袍。我擦上它，是為了『提醒自己值得更好的』。」</p>
+                                </div>
+                                <p class="text-secondary mt-4 font-semibold">結論：我們販賣的是「情感價值」與「身份認同」，而非「產品功效」，這能從根本上規避掉藥事法的處罰風險。</p>
+                            </div>
+                        </div>
+                        <!-- 風險 B -->
+                        <div class="card risk-card-neutral mb-4">
+                            <button class="accordion-toggle collapsed">
+                                <h3 class="text-xl font-bold mb-0">風險 B：【銷售風險】</h3>
+                                <span class="text-2xl text-gray-400 accordion-icon">+</span>
+                            </button>
+                            <div class="accordion-content hidden p-4">
+                                <p class="text-secondary mb-4"><strong>風險來源：</strong>「價格叫賣型」的競品，一旦停止補貼，銷量就歸零。</p>
+                                <p class="text-secondary"><strong>我們的解方：</strong>我們的戰略，是建立一個「可持續的銷售引擎」。觀眾的購買動機，來自於對「<strong class="emphasis">故事IP</strong>」的追隨，以及對「<strong class="emphasis">強化自我</strong>」的渴望。這份渴望，遠比「折扣」更持久、更強烈。</p>
+                            </div>
+                        </div>
+                        <!-- 風險 C -->
+                        <div class="card risk-card-neutral">
+                            <button class="accordion-toggle collapsed">
+                                <h3 class="text-xl font-bold mb-0">風險 C：【輿論風險】</h3>
+                                <span class="text-2xl text-gray-400 accordion-icon">+</span>
+                            </button>
+                            <div class="accordion-content hidden p-4">
+                                <p class="text-secondary mb-4"><strong>風險來源：</strong>「脫離單身」的主軸可能引發「物化女性」的負評。</p>
+                                <p class="text-secondary"><strong>我們的解方：</strong>主播的「真實故事」就是我們的「防火牆」。我們不攻擊觀眾，我們只分享主播「自己」的痛苦與轉變。我們永遠將敘事核心拉回到「<strong class="emphasis">強化自我</strong>」，而非「取悅他人」。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 11/11 方案 (Action Plan) - 補全 -->
+        <section id="action-plan">
+            <h2>七、【緊急救援方案】：11/11 光棍節專案</h2>
+            
+            <div class="card p-8 md:p-12 max-w-6xl mx-auto mb-12">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3>1. 專案背景</h3>
+                        <ul class="list-disc list-inside text-secondary">
+                            <li><strong>檔期：</strong>11/11 光棍節</li>
+                            <li><strong>主推產品：</strong>美白、健康、瘦身 相關商品</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>2. 創意主軸</h3>
+                        <p class="text-secondary">核心戰略：「主播自揭瘡疤」，圍繞「如何強化自我、才能脫離單身」的核心痛點。</p>
+                        <blockquote class="border-l-4 border-blue-500 pl-4 italic text-gray-300 mt-4">
+                            「你還在羨慕別人嗎？強化自我，是為了脫離單身，更是為了配得上更好的未來。」
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 md:p-12 max-w-6xl mx-auto">
+                <h3>3. 敘事腳本架構 與 戰術原理解析</h3>
+                <p class="text-secondary mb-8">此腳本目的在於同時實現「販賣焦慮」、「建立真實感」與「提供解方」。</p>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- A. 核心腳本結構 -->
+                    <div>
+                        <h4 class="text-blue-300">A. 核心腳本結構 (The How)</h4>
+                        <ol class="list-decimal list-inside space-y-4 text-secondary mt-4">
+                            <li>
+                                <strong class="text-gray-200">鉤子 (Hook)：主播最赤裸的內心感情故事</strong>
+                                <p class="text-sm text-tertiary">快速建立「真實感」，讓觀眾產生「我也是這樣」的投射。</p>
+                            </li>
+                            <li>
+                                <strong class="text-gray-200">轉折 (Turning Point)：[如何強化自己]</strong>
+                                <p class="text-sm text-tertiary">將觀眾的負面情緒（焦慮）導向正面積極的出口（自我提升）。</p>
+                            </li>
+                            <li>
+                                <strong class="text-gray-200">解方 (Solution)：提供實際的問題解決方法</strong>
+                                <p class="text-sm text-tertiary">產品是「裝備」或「武器」。將「購買」重新定義為「一項對自己的投資」。</p>
+                            </li>
+                        </ol>
+                    </div>
+                    <!-- B. 戰術原理解析 -->
+                    <div>
+                        <h4 class="text-blue-300">B. 戰術原理解析 (The Why)</h4>
+                        <ul class="list-disc list-inside space-y-4 text-secondary mt-4">
+                            <li>
+                                <strong class="text-gray-200">販賣恐懼焦慮</strong>
+                                <p class="text-sm text-tertiary">傳統「寵愛自己」太軟弱。我們販賣「如果你不改變，你也會如此」的<strong class="highlight">恐懼</strong>，創造「心理痛感」。</p>
+                            </li>
+                            <li>
+                                <strong class="text-gray-200">套進互動真實感</strong>
+                                <p class="text-sm text-tertiary">因為是主播親身經歷，觀眾的互動（安慰、提問）會極為真實，形成強大社群黏著度。</p>
+                            </li>
+                            <li>
+                                <strong class="text-gray-200">痛感 = 購買的原始驅動力</strong>
+                                <p class="text-sm text-tertiary">將「焦慮」轉化為「立即行動」的購買力，精準鎖定「渴望改變」的高價值客群。</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- 最終總結 (The Final Pitch) -->
+        <!-- 總結 (Final Summary) - 補全 -->
         <section id="final-summary">
-             <h2 class="text-center">綜合效益評估</h2>
-             <!-- Stacking Layout -->
-            <div class="grid grid-cols-1 gap-12 max-w-4xl mx-auto"> 
-                <div class="final-card">
-                    <h3 class="text-blue-400">一、 戰術總結 (一)：覆水難收，控制損傷</h3>
-                    <p class="text-secondary text-xs leading-relaxed"> 
-                        雙 11 檔期本質上是「價格戰」紅海，甚至是早已該開始執行的戰術性問題，再怎麼投如廣告預算能換回的實質業績終究有限，過度的資源投入均是戰術自殺。
+            <h2>戰略總結：破局之策</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mt-16">
+                <!-- 總結一 -->
+                <div class="card p-8 md:p-10 pain-card flex flex-col">
+                    <h2 class="!text-red-400">戰術總結：覆水難收，控制損傷</h2>
+                    <p class="!text-red-200">
+                        雙 11 檔期本質上是資本雄厚者的「<strong class="highlight">價格戰</strong>」紅海。
                     </p>
-                    <p class="text-gray-100 mt-8 font-semibold text-sm"> 
-                        <strong class="font-semibold text-gray-300">正確策略：</strong>不是「投入資源」，而是「借風點火」。以最低內容成本（『議題戰術影片』）去承接並激化「單身焦慮」，用最小成本、創造最大化的直播觀眾進場率。
+                    <p class="!text-red-200">
+                        因此，正確的策略不是「投入資源」，而是「<strong class="emphasis">借風點火</strong>」。我們將利用光棍節議題自帶的、免費的「單身焦慮」，以最低內容成本去承接並激化此痛點，創造最大化的直播觀眾進場率。
                     </p>
                 </div>
-                <div class="final-card">
-                    <h3 class="text-blue-400">二、 戰略洞察 (二)：品項繁雜，火力難集中</h3>
-                    <p class="text-secondary text-xs leading-relaxed"> 
-                        議聲的「品項繁雜」是優點也是容易是致命傷，會讓觀眾以為「低價雜貨鋪」而產生流失。
+                <!-- 總結二 -->
+                <div class="card p-8 md:p-10 solution-card flex flex-col">
+                    <h2 class="!text-green-400">戰略洞察：品項繁雜，火力集中</h2>
+                    <p class="!text-green-200">
+                        「<strong class="highlight">品項繁雜</strong>」是優點也是致命傷，易讓觀眾以為「低價雜貨鋪」。
                     </p>
-                    <p class="text-gray-100 mt-8 font-semibold text-sm"> 
-                        <strong class="font-semibold text-gray-300">正確策略：</strong>避談論單一產品功能，轉而敘述「強化自我」的『議題』。所有產品皆為「戰袍」與「道具」，將「致命弱點」完美轉化為「專業選品策展人」IP 的最強優勢。
+                    <p class="!text-green-200">
+                        因此，避談單一產品功能，轉而敘述「<strong class="emphasis">強化自我</strong>」的『議題』。所有繁雜的產品，都將被重新包裝為主角（主播）用來「強化自我」的「戰袍」與「道具」。
+                    </p>
+                    <p class="!text-green-200 font-semibold mt-4">
+                        此戰略能將「品項繁雜」的致命 weakness，完美轉化為「專業選品策展人」IP 的最強優勢。
                     </p>
                 </div>
             </div>
@@ -820,230 +814,264 @@
 
     </main>
 
-    <footer class="bg-gray-950 mt-32 border-t border-gray-800"> 
-        <div class="container mx-auto px-6 py-12 text-center text-gray-500 text-xs"> 
-            <p>&copy; 2025 議聲科技 戰略儀表板。此為基於提供之藍圖所生成的互動式報告。</p>
-        </div>
+    <!-- 頁尾 -->
+    <footer class="text-center py-12 mt-20 border-t border-gray-800">
+        <p class="text-sm text-gray-500">議聲科技 (統編 53408718) - 內部戰略藍圖</p>
     </footer>
 
+    <!-- 
+    ============================================================
+    === 關鍵 JAVASCRIPT 邏輯 ===
+    ============================================================
+    -->
     <script>
-        // --- 平台卡片互動邏輯 ---
-        const platformDetailsContainer = document.getElementById('platform-details-container');
-        const platformDetailsHeader = document.getElementById('platform-details-header');
-        const platformDetailsContent = document.getElementById('platform-details-content');
-        const platformTitle = document.getElementById('platform-title');
-        
-        const platformCards = {
-            tiktok: document.getElementById('card-tiktok'),
-            ig: document.getElementById('card-ig'),
-            shopee: document.getElementById('card-shopee')
-        };
-
-        const platformData = { // Corrected: Added full data for all platforms
-             tiktok: {
-                title: '1. 抖音 (TikTok): 引爆共鳴與快速擴散', 
-                headerClass: 'bg-gray-800 text-white',
+        // --- 內容：平台戰術分工 (Section III) ---
+        // 這是您缺失的內容，我已根據您的文字架構補上
+        const platformContent = {
+            tiktok: {
+                title: '1. 抖音 (TikTok): 引爆共鳴與快速擴散',
+                headerClasses: '!bg-gray-800 !text-white !border-gray-500',
                 content: `
-                    <p class="text-lg font-medium text-gray-300 mb-6"><strong>平台角色：</strong>流量放大器、新客捕撈網</p>
-                    <p class="text-lg font-medium text-gray-300 mb-10"><strong>戰略重點：</strong>提煉最痛的點，製造病毒式傳播。</p>
-                    <h4 class="font-bold mb-4 text-xl text-gray-100">執行方法：</h4>
-                    <ul class="list-disc list-inside space-y-4 text-xs text-gray-300">
-                        <li><strong class="font-semibold text-gray-100">內容要極度簡化：</strong>專注在 15 秒內，只講一個痛點、一個情境。<br/><em class="text-gray-400 text-xs">範例：拍「深夜獨自吃泡麵」鏡頭 + 扎心文案。</em></li>
-                        <li><strong class="font-semibold text-gray-100">善用熱門音樂/梗：</strong>將主播故事套入流行手法。</li>
-                        <li><strong class="font-semibold text-gray-100">目標不是轉單，是導流：</strong>結尾引導去 IG 看「後續故事」或預告直播，促進消費機率。</li>
-                    </ul>
-                ` 
-            },
-            ig: { 
-                title: '2. IG (Instagram): 建立深度認同與嚮往', 
-                 headerClass: 'bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 text-white', // Match card style
-                 content: `
-                    <p class="text-lg font-medium text-gray-300 mb-6"><strong>平台角色：</strong>品牌世界觀展示間、粉絲深度經營基地</p>
-                    <p class="text-lg font-medium text-gray-300 mb-10"><strong>戰略重點：</strong>說好完整的故事，塑造嚮往感。</p>
-                    <h4 class="font-bold mb-5 text-xl text-gray-100">執行方法 (多維度內容)：</h4>
-                    <div class="space-y-5">
-                        <div class="p-5 bg-gray-800 rounded-lg shadow-sm border border-gray-700">
-                            <strong class="text-purple-300 text-lg block mb-2">Reels (短影音)</strong>
-                            <p class="text-xs text-gray-400">30-60 秒濃縮「從谷底到崛起」，視覺精緻，配樂渲染。</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-xl text-gray-200">平台角色：流量的放大器、新客的捕撈網</h4>
+                            <p class="text-lg font-medium text-blue-300 mt-2 mb-6">戰略重點：提煉最痛的點，製造病毒式傳播。</p>
                         </div>
-                        <div class="p-5 bg-gray-800 rounded-lg shadow-sm border border-gray-700">
-                            <strong class="text-purple-300 text-lg block mb-2">Stories (限動)</strong>
-                            <p class="text-xs text-gray-400">「自揭瘡疤」最真實處。分享當下情緒、脆弱，拉近距離。</p>
-                        </div>
-                        <div class="p-5 bg-gray-800 rounded-lg shadow-sm border border-gray-700">
-                            <strong class="text-purple-300 text-lg block mb-2">Posts (貼文)</strong>
-                            <p class="text-xs text-gray-400">高品質圖文，展示「強化自我」後理想生活，塑造風格。</p>
+                        <div>
+                            <h4 class="text-xl text-gray-200">執行方法：</h4>
+                            <ul class="list-disc list-inside space-y-3 text-secondary">
+                                <li><strong>極度簡化：</strong>15 秒內只講一個痛點、一個情境。</li>
+                                <li><strong>善用熱門梗：</strong>將主播故事套入流行音樂或手法。</li>
+                                <li><strong>目標是導流：</strong>CTA 應引導至 IG 看「後續的故事」，或預告直播。</li>
+                            </ul>
                         </div>
                     </div>
-                 ` 
+                `
+            },
+            ig: {
+                title: '2. IG (Instagram): 建立深度認同與嚮往',
+                headerClasses: '!bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 !text-white !border-purple-500',
+                content: `
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-xl text-gray-200">平台角色：品牌世界觀的展示間、粉絲的深度經營基地</h4>
+                            <p class="text-lg font-medium text-purple-300 mt-2 mb-6">戰略重點：說好完整的故事，塑造嚮往感。</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xl text-gray-200">執行方法：</h4>
+                            <ul class="list-disc list-inside space-y-3 text-secondary">
+                                <li><strong>Reels (短影音)：</strong>濃縮「從谷底到崛起」的轉變，視覺精緻。</li>
+                                <li><strong>Stories (限時動態)：</strong>最真實的「自揭瘡疤」處，分享情緒、脆弱，拉近距離。</li>
+                                <li><strong>Posts (貼文)：</strong>高品質圖片與深刻文案，展示「強化自我」後的理想生活。</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
             },
             shopee: {
-                title: '3. 蝦皮直播 (Shopee Live): 收攏流量與完成變現', 
-                 headerClass: 'bg-orange-700 text-white', // Match card style
+                title: '3. 蝦皮直播 (Shopee Live): 收攏流量與完成變現',
+                headerClasses: '!bg-orange-700 !text-white !border-orange-500',
                 content: `
-                    <p class="text-lg font-medium text-orange-100 mb-6"><strong>平台角色：</strong>故事的終點、消費的收銀台</p>
-                    <p class="text-lg font-medium text-orange-100 mb-10"><strong>戰略重點：</strong>將情感共鳴轉化為立即的購買衝動。</p>
-                    <h4 class="font-bold mb-5 text-xl text-orange-50">執行方法：</h4>
-                    <ul class="list-disc list-inside space-y-5 text-sm text-orange-100"> 
-                        <li><strong class="font-semibold text-white">直播開場儀式感：</strong>呼應 IG/抖音故事：「很多人問我怎麼走出來...今天介紹我的『戰備品』。」</li>
-                        <li><strong class="font-semibold text-white">賦予產品「道具」意義：</strong>每件商品都是「強化自我」的關鍵道具（「戰袍」、「魔藥」）。</li>
-                        <li><strong class="font-semibold text-white">創造集體氛圍：</strong>利用限時優惠、互動，營造「我們都在變好路上」社群感，讓下單變儀式。</li>
-                    </ul>
-                ` 
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-xl text-gray-200">平台角色：故事的終點、消費的收銀台</h4>
+                            <p class="text-lg font-medium text-orange-200 mt-2 mb-6">戰略重點：將情感共鳴轉化為立即的購買衝動。</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xl text-gray-200">執行方法：</h4>
+                            <ul class="list-disc list-inside space-y-3 text-secondary">
+                                <li><strong>直播開場儀式感：</strong>快速呼應 IG/抖音 上的故事，介紹「戰備品」。</li>
+                                <li><strong>賦予產品「道具」意義：</strong>每件商品都是「強化自我」旅程的關鍵道具。</li>
+                                <li><strong>創造集體氛圍：</strong>創造「我們都是正在變好路上」的社群感，讓下單變成集體儀式。</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
             }
         };
 
+        // --- 平台卡片切換邏輯 ---
+        const platformCards = document.querySelectorAll('.platform-card');
+        const detailsContainer = document.getElementById('platform-details-container');
+        const detailsHeader = document.getElementById('platform-details-header');
+        const detailsTitle = document.getElementById('platform-title');
+        const detailsContent = document.getElementById('platform-details-content');
 
-        function showPlatformDetails(platform) {
-            const data = platformData[platform];
-            if (!data) return; // Add safety check
-            platformTitle.textContent = data.title;
-            platformDetailsContent.innerHTML = data.content;
-            platformDetailsHeader.className = 'p-10 rounded-t-xl transition-all duration-300 border-b border-gray-800 ' + data.headerClass; // Adjusted padding and border
-            Object.values(platformCards).forEach(card => card.classList.remove('active'));
-            if (platformCards[platform]) { // Check existence
-                 platformCards[platform].classList.add('active');
+        function showPlatformDetails(platformKey) {
+            const data = platformContent[platformKey];
+            if (!data) return;
+
+            // 1. 更新卡片選中狀態
+            platformCards.forEach(card => card.classList.remove('active'));
+            document.getElementById(`card-${platformKey}`).classList.add('active');
+
+            // 2. 更新詳細內容區的標題和樣式
+            detailsHeader.className = 'p-8 rounded-t-xl transition-all duration-300 border-b border-gray-800 ' + data.headerClasses;
+            detailsTitle.innerText = data.title;
+
+            // 3. 更新詳細內容
+            detailsContent.innerHTML = data.content;
+        }
+        
+        // --- 手風琴 (Accordion) 邏輯 ---
+        const accordionToggles = document.querySelectorAll('.accordion-toggle');
+        accordionToggles.forEach(toggle => {
+            // 預設將 'collapsed' 類別移除，並展開內容
+            const content = toggle.nextElementSibling;
+            if (content && !toggle.classList.contains('collapsed')) {
+                content.classList.remove('hidden');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                // 恢復 padding (如果 'hidden' class 移除了它)
+                content.style.paddingTop = '1rem'; // 假設 p-4
+                content.style.paddingBottom = '1rem'; // 假設 p-4
+            } else if (content) {
+                // 如果是 'collapsed'，確保 CSS 是正確的
+                content.classList.add('hidden');
+                content.style.maxHeight = '0px';
+                content.style.paddingTop = '0px';
+                content.style.paddingBottom = '0px';
             }
+
+            toggle.addEventListener('click', () => {
+                const content = toggle.nextElementSibling;
+                if (!content) return;
+                
+                const isCollapsed = toggle.classList.toggle('collapsed');
+                
+                if (isCollapsed) {
+                    // 收起
+                    content.style.maxHeight = '0px';
+                    content.style.paddingTop = '0px';
+                    content.style.paddingBottom = '0px';
+                    // transition 結束後再加 hidden
+                    setTimeout(() => content.classList.add('hidden'), 300);
+                } else {
+                    // 展開
+                    content.classList.remove('hidden');
+                    // 立即設定為 0，然後再設為 scrollHeight 以觸發 transition
+                    content.style.maxHeight = '0px';
+                    content.style.paddingTop = '1rem'; // 恢復 p-4
+                    content.style.paddingBottom = '1rem'; // 恢復 p-4
+
+                    // 獲取內容的實際高度
+                    const scrollHeight = content.scrollHeight;
+                    content.style.maxHeight = scrollHeight + 'px';
+                }
+            });
+        });
+        
+        // --- 手機版選單 (Mobile Menu) 邏輯 ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // --- 關閉手機選單 (點擊連結時) ---
+        function closeMenu() {
+            mobileMenu.classList.add('hidden');
         }
 
-        // --- Chart.js ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctx = document.getElementById('contentDoughnut')?.getContext('2d');
-            if (!ctx) return; // Add check for element existence
-            const chartTextColor = '#9ca3af'; // text-gray-400
+        // --- 導航欄：滾動監測 (Scroll-Spy) 邏輯 ---
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('header nav a[href^="#"]'); // 確保只選取錨點連結
 
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['A. IP 建立內容', 'B. 議題戰術內容'],
-                    datasets: [{
-                        label: '影片配額',
-                        data: [15, 7],
-                         backgroundColor: [ '#3b82f6', '#60a5fa' ], // blue-500, blue-400 
-                         borderColor: [ '#111827', '#111827' ], // bg-gray-900 borders
-                         hoverOffset: 8, // Increase hover offset
-                        borderWidth: 3
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '65%', 
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: chartTextColor, padding: 20, font: { size: 10, family: 'Noto Sans TC' } } }, // Reduced size
-                        tooltip: { 
-                            backgroundColor: 'rgba(17, 24, 39, 0.9)', // bg-gray-900 with alpha
-                            titleColor: '#d1d5db', // text-gray-300
-                            bodyColor: '#9ca3af', // text-gray-400
-                            borderColor: '#374151', // border-gray-700
-                            borderWidth: 1,
-                            padding: 8, // Reduced padding
-                            boxPadding: 3, 
-                            titleFont: { family: 'Noto Sans TC', weight: 'bold', size: 10 }, // Reduced size
-                            bodyFont: { family: 'Noto Sans TC', size: 9 }, // Reduced size
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.parsed !== null) { label += context.parsed + ' 支影片'; }
-                                    return label;
-                                }
+        const observer = new IntersectionObserver((entries) => {
+            let latestActiveId = null;
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    latestActiveId = entry.target.id;
+                }
+            });
+
+            if (latestActiveId) {
+                 navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const href = link.getAttribute('href');
+                    if (href === `#${latestActiveId}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }, { 
+            rootMargin: '-50% 0px -50% 0px' // 偵測點在畫面垂直 50% 的位置
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // --- 圖表 (Chart.js) 邏輯 ---
+        const ctx = document.getElementById('contentDoughnut').getContext('2d');
+        const contentDoughnut = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['A. IP 建立內容 (15 支)', 'B. 議題戰術內容 (7 支)'],
+                datasets: [{
+                    data: [15, 7],
+                    backgroundColor: [
+                        'rgba(96, 165, 250, 0.7)', // blue-400
+                        'rgba(248, 113, 113, 0.7)'  // red-400
+                    ],
+                    borderColor: [
+                        'rgba(96, 165, 250, 1)',
+                        'rgba(248, 113, 113, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#d1d5db', // text-gray-300
+                            font: {
+                                family: "'Noto Sans TC', sans-serif",
+                                size: 14
                             }
+                        }
+                    },
+                    tooltip: {
+                        titleFont: {
+                            family: "'Noto Sans TC', sans-serif",
+                        },
+                        bodyFont: {
+                            family: "'Noto Sans TC', sans-serif",
                         }
                     }
                 }
-            });
-            showPlatformDetails('tiktok'); // Default view
+            }
         });
 
-        // --- Accordions ---
-        const accordions = document.querySelectorAll('.accordion-toggle');
-        accordions.forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                const icon = button.querySelector('.accordion-icon');
-                if (!content || !icon) return; // Add safety check
-                const isCollapsed = content.classList.contains('hidden');
-                
-                // Close other open accordions within the same wrapper
-                const wrapper = button.closest('.accordion-wrapper');
-                if (wrapper) {
-                    wrapper.querySelectorAll('.accordion-toggle').forEach(otherButton => {
-                        if (otherButton !== button) {
-                            const otherContent = otherButton.nextElementSibling;
-                            const otherIcon = otherButton.querySelector('.accordion-icon');
-                            if (otherContent && otherIcon) { // Check existence
-                                otherContent.classList.add('hidden');
-                                otherButton.classList.add('collapsed');
-                                otherIcon.style.transform = 'rotate(0deg)';
-                            }
-                        }
-                    });
-                }
-
-                // Toggle current accordion
-                content.classList.toggle('hidden');
-                button.classList.toggle('collapsed');
-                icon.style.transform = isCollapsed ? 'rotate(135deg)' : 'rotate(0deg)';
-            });
-        });
-        // Pre-open specific accordions - Ensure they exist before clicking
-         const riskAccordionToggle = document.getElementById('accordion-a-toggle');
-         if (riskAccordionToggle) riskAccordionToggle.click(); // Open Risk A by default
-         // Keep others closed initially for clarity
-
-        // --- Navigation ---
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton?.addEventListener('click', () => mobileMenu.classList.toggle('hidden')); // Add null check
-        function closeMenu() { mobileMenu?.classList.add('hidden'); } // Add null check
-
-        const navLinks = document.querySelectorAll('.nav-link');
-        function setActiveLink(el) {
-            navLinks.forEach(link => link.classList.remove('active'));
-            el?.classList.add('active'); // Add null check
-        }
-
-        const sections = document.querySelectorAll('main section'); // Target sections within main only
-        window.addEventListener('scroll', () => {
-            let current = 'overview';
-            const scrollY = window.pageYOffset;
-             const headerHeight = document.querySelector('header')?.offsetHeight || 64; // Get header height or default
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                 // Dynamic offset based on section height relative to viewport
-                 let offset = headerHeight + 100; // Adjusted base offset
-                 if (section.offsetHeight > window.innerHeight * 0.7) {
-                     offset = headerHeight + 180; // Adjusted larger offset
-                 }
-                
-                if (scrollY >= sectionTop - offset) { 
-                    current = section.getAttribute('id');
-                }
-            });
+        // --- 頁面載入時：觸發一次 'showPlatformDetails' ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 預設顯示 TikTok
+            showPlatformDetails('tiktok');
             
-            // Fallback for final-summary section
-            const finalSummarySection = document.getElementById('final-summary');
-             // More robust check for bottom of page
-            if (finalSummarySection && (window.innerHeight + scrollY) >= document.documentElement.scrollHeight - 150) { // Adjusted bottom offset
-                 current = 'final-summary';
-            }
-
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
+            // 預設展開所有 "collapsed" 的手風琴
+            document.querySelectorAll('.accordion-toggle.collapsed').forEach(toggle => {
+                const content = toggle.nextElementSibling;
+                if (content) {
+                    content.style.maxHeight = '0px';
+                    content.style.paddingTop = '0px';
+                    content.style.paddingBottom = '0px';
+                    content.classList.add('hidden');
                 }
             });
-             // Highlight the first link if scroll is near the top
-            if (scrollY < 200) { // Increased threshold
-                 navLinks.forEach(link => link.classList.remove('active'));
-                 const firstLink = document.querySelector('.nav-link[href="#overview"]');
-                 if (firstLink) firstLink.classList.add('active');
-            }
-        }, { passive: true }); // Improve scroll performance
-
+            // 預設展開沒有 "collapsed" 的手風琴
+             document.querySelectorAll('.accordion-toggle:not(.collapsed)').forEach(toggle => {
+                const content = toggle.nextElementSibling;
+                if (content) {
+                    content.classList.remove('hidden');
+                    content.style.paddingTop = '1rem';
+                    content.style.paddingBottom = '1rem';
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
     </script>
 </body>
 </html>
-
